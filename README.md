@@ -1,5 +1,5 @@
 [![License](https://img.shields.io/badge/license-Unlicense-blue.svg)](https://github.com/maurerf/garbled-inference/blob/master/LICENSE)
-[![CI Workflow](https://github.com/maurerf/garbled-inference/actions/workflows/ci.yml/badge.svg)
+![CI Workflow](https://github.com/maurerf/garbled-inference/actions/workflows/ci.yml/badge.svg)
  
 
 
