@@ -3,5 +3,10 @@
 /**
  * TODO: Doxygen compliant interface comment.
  */
-class NeuralNet {};
+class NeuralNet {
+public:
+
+private:
+
+};
 
