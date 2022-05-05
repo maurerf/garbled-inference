@@ -38,11 +38,11 @@ std::vector<int> GarbledInference::Layer::propagateForward(std::vector<int> inpu
 constexpr int GarbledInference::ActivationLayer::activation(const int&  i) noexcept {
 #ifdef GI_ACTIVATION_STEP
     return static_cast<int>(i > 0);
-#elifdef GI_ACTIVATION_RELU
-    return (i > 0) ? i : 0;
-#else
-    static_assert(false, "No activation function defined for GI::ActivationLayer!");
 #endif
+#ifdef GI_ACTIVATION_RELU
+    return (i > 0) ? i : 0;
+#endif
+
     //TODO: more afs
 }
 
