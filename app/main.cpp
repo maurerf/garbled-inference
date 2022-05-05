@@ -15,9 +15,7 @@
  * Main functions of Garbled Inference.
  */
 int main() {
-
-    GarbledInference::NeuralNet nn {};
-    const auto result = nn.inference({1,-2,3,-4});
+    const auto result = GarbledInference::NeuralNet::getInstance().inference({1,-2,3,-4});
     for(const auto& i : result)
         std::cout << i << std::endl;
 

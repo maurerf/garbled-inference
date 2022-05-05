@@ -6,8 +6,10 @@
 #include <iostream>
 
 //TODO: fix this properly
+#ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wweak-vtables"
+#endif
 
 // define what activation function to use
 #define GI_ACTIVATION_STEP
@@ -139,4 +141,6 @@ namespace GarbledInference {
     };
 }
 
+#ifdef __clang__
 #pragma clang diagnostic pop
+#endif

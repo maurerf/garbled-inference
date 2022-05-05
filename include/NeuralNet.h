@@ -14,7 +14,10 @@ namespace GarbledInference {
         /**
          * Creates a new neural net. TODO: input parametrisation
          */
-        NeuralNet();
+        static NeuralNet& getInstance() {
+            [[clang::no_destroy]] static NeuralNet singleton {}; //TODO: check: is this a memory leak?
+            return singleton;
+        }
 
         NeuralNet(const NeuralNet&) = delete;
 
@@ -35,6 +38,8 @@ namespace GarbledInference {
         NeuralNet& operator=(NeuralNet&&) = delete;
 
     private:
+        NeuralNet();
+
         std::unique_ptr<GarbledInference::Layer> _firstLayer;
     };
 }
