@@ -3,6 +3,15 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <iostream>
+
+//TODO: fix this properly
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wweak-vtables"
+
+// define what activation function to use
+#define GI_ACTIVATION_STEP
+#define DEBUG_LAYERS
 
 namespace GarbledInference {
 
@@ -11,10 +20,18 @@ namespace GarbledInference {
     */
     typedef std::vector<std::vector<double>> WeightMatrix;
 
+
+
+
+
     /**
     * TODO: Doxygen compliant interface comment.
     */
     enum class LAYER_TYPE {FULLY_CONNECTED, ACTIVATION};
+
+
+
+
 
     /**
     * TODO: Doxygen compliant interface comment.
@@ -26,8 +43,7 @@ namespace GarbledInference {
          * Constructs a neural network layer.
          *
          * @param weightMatrices nonempty list of layer weight matrices
-         * @param layerTypes nonempty list of layer types
-         * @return Layer object
+         * @param layerTypes nonempty list of layer type
          */
         Layer(std::vector<WeightMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes);
 
@@ -62,15 +78,65 @@ namespace GarbledInference {
          * @param input input to this layer's neurons
          * @return output of this layer's processing
          */
-        virtual std::vector<int> process(std::vector<int> input) = 0;
+        inline virtual std::vector<int> process(const std::vector<int>& input) noexcept { return input; }
 
     private:
         //TODO: bias vector
         GarbledInference::WeightMatrix _weights;
         std::unique_ptr<Layer> _nextLayer;
     };
+
+
+
+
+
+    /**
+    * TODO: Doxygen compliant interface comment.
+    */
+    class ActivationLayer : public Layer {
+    public:
+        // Constructors
+        ActivationLayer(std::vector <WeightMatrix> &weightMatrices, std::vector <LAYER_TYPE> &layerTypes) : Layer(
+                weightMatrices, layerTypes) {}
+
+        // Member functions
+        /**
+         * TODO
+         *
+         * @param input see GarbledInference::Layer::process
+         * @return see GarbledInference::Layer::process
+         */
+        std::vector<int> process(const std::vector<int> &input) noexcept override;
+
+        /**
+         * Activation function used by activation layers
+         * @param i integer input of activation function
+         * @return integer output of activation function
+         */
+        static constexpr int activation(const int &i) noexcept;
+    };
+
+
+
+
+
+    /**
+    * TODO: Doxygen compliant interface comment.
+    */
+    class FullyConnectedLayer : public Layer {
+    public:
+        // Constructors
+        FullyConnectedLayer(std::vector<WeightMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+
+        // Member functions
+        /**
+         * TODO
+         *
+         * @param input see GarbledInference::Layer::process
+         * @return see GarbledInference::Layer::process
+         */
+        std::vector<int> process(const std::vector<int>& input) noexcept override;
+    };
 }
 
-// Include Layer implementations
-#include "FullyConnectedLayer.h"
-#include "ActivationLayer.h"
+#pragma clang diagnostic pop

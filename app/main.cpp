@@ -1,7 +1,7 @@
 // Executables must have the following defined if the library contains
 // doctest definitions. For builds with this disabled, e.g. code shipped to
 // users, this can be left out.
-#ifdef ENABLE_DOCTEST_IN_LIBRARY
+#ifdef /*ENABLE_DOCTEST_IN_LIBRARY*/ false
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "doctest/doctest.h"
 #endif
@@ -15,5 +15,11 @@
  * Main functions of Garbled Inference.
  */
 int main() {
-	return 0;
+
+    GarbledInference::NeuralNet nn {};
+    const auto result = nn.inference({1,-2,3,-4});
+    for(const auto& i : result)
+        std::cout << i << std::endl;
+
+    return 0;
 }

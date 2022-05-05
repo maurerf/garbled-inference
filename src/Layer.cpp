@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "Layer.h"
 
 // Constructors
@@ -7,6 +8,10 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::WeightMatrix>& weig
     // recursively init next layer
     weightMatrices.erase(weightMatrices.begin());
     layerTypes.erase(layerTypes.begin());
+
+#ifdef DEBUG_LAYERS
+    std::cout << "Constructed new layer! " << weightMatrices.size() << " layers remaining." << std::endl;
+#endif
 
     if(!weightMatrices.empty() && !layerTypes.empty())
         switch (layerTypes.front()) {
@@ -22,8 +27,46 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::WeightMatrix>& weig
 
 // Member Functions
 std::vector<int> GarbledInference::Layer::propagateForward(std::vector<int> input) noexcept {
-    if(_nextLayer == nullptr)
+    if(_nextLayer == nullptr) {
         return process(input);
-    else
+    }
+    else {
         return _nextLayer->propagateForward(process(input));
+    }
 }
+
+constexpr int GarbledInference::ActivationLayer::activation(const int&  i) noexcept {
+#ifdef GI_ACTIVATION_STEP
+    return static_cast<int>(i > 0);
+#elifdef GI_ACTIVATION_RELU
+    return (i > 0) ? i : 0;
+#else
+    static_assert(false, "No activation function defined for GI::ActivationLayer!");
+#endif
+    //TODO: more afs
+}
+
+inline std::vector<int> GarbledInference::ActivationLayer::process(const std::vector<int>& input) noexcept {
+    //TODO: redesign this as a function, not a loop
+    std::vector<int> ans;
+    for(const auto& i : input) {
+        ans.emplace_back(activation(i));
+    }
+
+#ifdef DEBUG_LAYERS
+    std::cout << "Processed activation layer!" << std::endl;
+#endif
+
+    return ans;
+}
+
+inline std::vector<int> GarbledInference::FullyConnectedLayer::process(const std::vector<int>& input) noexcept {
+    //TODO
+
+#ifdef DEBUG_LAYERS
+    std::cout << "Processed fully connected layer!" << std::endl;
+#endif
+
+    return input;
+}
+
