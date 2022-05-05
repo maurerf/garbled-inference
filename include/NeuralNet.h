@@ -14,10 +14,7 @@ namespace GarbledInference {
         /**
          * Creates a new neural net. TODO: input parametrisation
          */
-        static NeuralNet& getInstance() {
-            [[clang::no_destroy]] static NeuralNet singleton {}; //TODO: check: is this a memory leak?
-            return singleton;
-        }
+        static NeuralNet& getInstance();
 
         NeuralNet(const NeuralNet&) = delete;
 

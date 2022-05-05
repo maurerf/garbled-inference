@@ -1,5 +1,15 @@
 #include "NeuralNet.h"
 
+GarbledInference::NeuralNet &GarbledInference::NeuralNet::getInstance() {
+    {
+#ifdef __clang__
+        [[clang::no_destroy]]
+#endif
+        static NeuralNet singleton {}; //TODO: check: is this a memory leak?
+        return singleton;
+    }
+}
+
 GarbledInference::NeuralNet::NeuralNet() {
     //define layer topology
     std::vector<GarbledInference::LAYER_TYPE> layers = {
