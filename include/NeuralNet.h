@@ -28,7 +28,7 @@ namespace GarbledInference {
          * @param input data to be classified
          * @return mapped feature vector
          */
-        std::vector<int> inference(std::vector<int> input) noexcept;
+        NeuronVector inference(const NeuronVector& input) noexcept;
 
         NeuralNet& operator=(const NeuralNet&) = delete;
 

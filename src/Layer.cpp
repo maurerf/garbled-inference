@@ -26,7 +26,10 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::WeightMatrix>& weig
 
 
 // Member Functions
-std::vector<int> GarbledInference::Layer::propagateForward(std::vector<int> input) noexcept {
+GarbledInference::NeuronVector GarbledInference::Layer::propagateForward(const GarbledInference::NeuronVector& input) noexcept {
+#ifdef DEBUG_LAYERS
+    std::cout << input << std::endl << std::endl;
+#endif
     if(_nextLayer == nullptr) {
         return process(input);
     }
@@ -35,38 +38,32 @@ std::vector<int> GarbledInference::Layer::propagateForward(std::vector<int> inpu
     }
 }
 
-constexpr int GarbledInference::ActivationLayer::activation(const int&  i) noexcept {
+constexpr double GarbledInference::ActivationLayer::activation(const double&  i) noexcept {
 #ifdef GI_ACTIVATION_STEP
-    return static_cast<int>(i > 0);
+    return (i > 0) ? 1.0 : 0.0;
 #endif
 #ifdef GI_ACTIVATION_RELU
-    return (i > 0) ? i : 0;
+    return (i > 0) ? i : 0.0;
 #endif
 
     //TODO: more afs
 }
 
-inline std::vector<int> GarbledInference::ActivationLayer::process(const std::vector<int>& input) noexcept {
-    //TODO: redesign this as a function, not a loop
-    std::vector<int> ans;
-    for(const auto& i : input) {
-        ans.emplace_back(activation(i));
-    }
+inline GarbledInference::NeuronVector GarbledInference::ActivationLayer::process(const GarbledInference::NeuronVector& input) noexcept {
 
 #ifdef DEBUG_LAYERS
-    std::cout << "Processed activation layer!" << std::endl;
+    std::cout << "Processing activation layer!" << std::endl;
 #endif
 
-    return ans;
+    return input.unaryExpr(&activation);
 }
 
-inline std::vector<int> GarbledInference::FullyConnectedLayer::process(const std::vector<int>& input) noexcept {
-    //TODO
+inline GarbledInference::NeuronVector GarbledInference::FullyConnectedLayer::process(const GarbledInference::NeuronVector& input) noexcept {
 
 #ifdef DEBUG_LAYERS
-    std::cout << "Processed fully connected layer!" << std::endl;
+    std::cout << "Processing fully connected layer!" << std::endl;
 #endif
 
-    return input;
+    return input * _weights;
 }
 

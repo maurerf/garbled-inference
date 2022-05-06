@@ -4,6 +4,7 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+#include <eigen3/Eigen/Eigen>
 
 //TODO: fix this properly
 #ifdef __clang__
@@ -12,15 +13,16 @@
 #endif
 
 // define what activation function to use
-#define GI_ACTIVATION_STEP
-#define DEBUG_LAYERS
+#define GI_ACTIVATION_RELU
+//#define DEBUG_LAYERS
 
 namespace GarbledInference {
 
     /**
     * TODO: Doxygen compliant interface comment.
     */
-    typedef std::vector<std::vector<double>> WeightMatrix;
+    typedef Eigen::MatrixXd WeightMatrix;
+    typedef Eigen::RowVectorXd NeuronVector; //TODO: better name suited for first and last layer as well
 
 
 
@@ -65,7 +67,7 @@ namespace GarbledInference {
          * @param input input vector to be classified
          * @return feature vector
          */
-        std::vector<int> propagateForward(std::vector<int> input) noexcept;
+        NeuronVector propagateForward(const NeuronVector& input) noexcept;
 
         Layer& operator=(const Layer&) = delete;
 
@@ -80,11 +82,12 @@ namespace GarbledInference {
          * @param input input to this layer's neurons
          * @return output of this layer's processing
          */
-        inline virtual std::vector<int> process(const std::vector<int>& input) noexcept { return input; }
+        inline virtual NeuronVector process(const NeuronVector & input) noexcept { return input; } //TODO: make pure virtual
 
-    private:
-        //TODO: bias vector
+
         GarbledInference::WeightMatrix _weights;
+        //TODO: bias vector
+    private:
         std::unique_ptr<Layer> _nextLayer;
     };
 
@@ -108,14 +111,14 @@ namespace GarbledInference {
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process
          */
-        std::vector<int> process(const std::vector<int> &input) noexcept override;
+        NeuronVector process(const NeuronVector &input) noexcept override;
 
         /**
          * Activation function used by activation layers
          * @param i integer input of activation function
          * @return integer output of activation function
          */
-        static constexpr int activation(const int &i) noexcept;
+        static constexpr double activation(const double &i) noexcept;
     };
 
 
@@ -137,7 +140,7 @@ namespace GarbledInference {
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process
          */
-        std::vector<int> process(const std::vector<int>& input) noexcept override;
+        NeuronVector process(const NeuronVector& input) noexcept override;
     };
 }
 
