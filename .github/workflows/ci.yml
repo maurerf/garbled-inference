@@ -14,8 +14,8 @@ jobs:
       matrix:
         toolchain:
           - linux-gcc
-          - macos-clang
-          - windows-msvc
+          - linux-clang
+          - linux-msvc
 
         configuration:
           - Debug
@@ -25,17 +25,20 @@ jobs:
             os: ubuntu-latest
             compiler: gcc
 
-          - toolchain: macos-clang
-            os: macos-latest
+          - toolchain: linux-clang
+            os: ubuntu-latest
             compiler: clang
 
-          - toolchain: windows-msvc
-            os: windows-latest
+          - toolchain: linux-msvc
+            os: ubuntu-latest
             compiler: msvc
 
     steps:
     - name: Checkout Code
       uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: apt-get install libeigen3-dev
 
     - name: Configure (${{ matrix.configuration }})
       run: cmake -S . -Bbuild -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
