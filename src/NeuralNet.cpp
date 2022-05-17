@@ -20,7 +20,7 @@ GarbledInference::NeuralNet::NeuralNet() {
     };
 
     // define weight matrices (for fully connected layers)
-    const GarbledInference::WeightMatrix fc1_weights {
+    const GarbledInference::ParameterMatrix fc1_weights {
             {3.0, 1.0, 1.3, -1.0},
             {-1.0, -5.0, 1.0, 1.0},
             {1.0, 4.0, 1.0, -1.55},
@@ -28,7 +28,7 @@ GarbledInference::NeuralNet::NeuralNet() {
     };
 
 
-    const GarbledInference::WeightMatrix fc2_weights {
+    const GarbledInference::ParameterMatrix fc2_weights {
             {-10.0, 1.0, 15.5, 1.0},
             {-33.0, 1.0, 1.0, 1.3},
             {1.0, 1.0, 0.05, -1.0},
@@ -36,7 +36,7 @@ GarbledInference::NeuralNet::NeuralNet() {
     };
 
 
-    std::vector<GarbledInference::WeightMatrix> weights {
+    std::vector<GarbledInference::ParameterMatrix> weights {
             fc1_weights,
             {/*activation layer*/},
             fc2_weights,
@@ -53,6 +53,6 @@ GarbledInference::NeuralNet::NeuralNet() {
 
 }
 
-GarbledInference::NeuronVector GarbledInference::NeuralNet::inference(const GarbledInference::NeuronVector& input) noexcept {
+GarbledInference::Neurons GarbledInference::NeuralNet::inference(const GarbledInference::Neurons& input) noexcept {
     return _firstLayer->propagateForward(input);
 }

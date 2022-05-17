@@ -12,7 +12,7 @@ namespace GarbledInference {
     public:
         // Constructors
         /**
-         * Creates a new neural net. TODO: input parametrisation
+         * Creates a new neural net.
          */
         static NeuralNet& getInstance();
 
@@ -28,7 +28,7 @@ namespace GarbledInference {
          * @param input data to be classified
          * @return mapped feature vector
          */
-        NeuronVector inference(const NeuronVector& input) noexcept;
+        Neurons inference(const Neurons& input) noexcept;
 
         NeuralNet& operator=(const NeuralNet&) = delete;
 
