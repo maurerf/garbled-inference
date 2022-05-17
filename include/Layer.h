@@ -99,149 +99,15 @@ namespace GarbledInference {
     private:
         std::unique_ptr<Layer> _nextLayer;
     };
-
-
-
-
-
-    /**
-    * TODO: Doxygen compliant interface comment.
-    */
-    class ActivationLayer : public Layer {
-    public:
-        // Constructors
-        ActivationLayer(std::vector <ParameterMatrix> &weightMatrices, std::vector <LAYER_TYPE> &layerTypes) : Layer(
-                weightMatrices, layerTypes) {}
-
-        // Member functions
-        /**
-         * TODO
-         *
-         * @param input see GarbledInference::Layer::process
-         * @return see GarbledInference::Layer::process
-         */
-        Neurons process(const Neurons &input) noexcept override;
-
-        /**
-         * Activation function used by activation layers
-         * @param i integer input of activation function
-         * @return integer output of activation function
-         */
-        static constexpr double activation(const double &i) noexcept;
-    };
-
-
-
-
-
-    /**
-    * TODO: Doxygen compliant interface comment.
-    */
-    class FullyConnectedLayer : public Layer {
-    public:
-        // Constructors
-        FullyConnectedLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
-
-        // Member functions
-        /**
-         * TODO
-         *
-         * @param input see GarbledInference::Layer::process
-         * @return see GarbledInference::Layer::process
-         */
-        Neurons process(const Neurons& input) noexcept override;
-    };
-
-
-
-
-
-
-    /**
-    * TODO: Doxygen compliant interface comment.
-    */
-    class AdditionLayer : public Layer {
-    public:
-        // Constructors
-        AdditionLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
-
-        // Member functions
-        /**
-         * TODO
-         *
-         * @param input see GarbledInference::Layer::process
-         * @return see GarbledInference::Layer::process
-         */
-        Neurons process(const Neurons& input) noexcept override;
-    };
-
-
-
-
-
-    /**
-    * TODO: Doxygen compliant interface comment.
-    */
-    template<size_t kernel_size, size_t stride>
-    class MaxPoolingLayer : public Layer {
-    public:
-        // Constructors
-        MaxPoolingLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
-
-        // Member functions
-        /**
-         * TODO
-         *
-         * @param input see GarbledInference::Layer::process
-         * @return see GarbledInference::Layer::process
-         */
-        Neurons process(const Neurons& input) noexcept override;
-    };
-
-
-
-
-
-    /**
-    * TODO: Doxygen compliant interface comment.
-    */
-    class ConvolutionLayer : public Layer {
-    public:
-        // Constructors
-        ConvolutionLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
-
-        // Member functions
-        /**
-         * TODO
-         *
-         * @param input see GarbledInference::Layer::process
-         * @return see GarbledInference::Layer::process
-         */
-        Neurons process(const Neurons& input) noexcept override;
-    };
-
-
-
-
-
-    /**
-    * TODO: Doxygen compliant interface comment.
-    */
-    class ReshapeLayer : public Layer {
-    public:
-        // Constructors
-        ReshapeLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
-
-        // Member functions
-        /**
-         * TODO
-         *
-         * @param input see GarbledInference::Layer::process
-         * @return see GarbledInference::Layer::process
-         */
-        Neurons process(const Neurons& input) noexcept override;
-    };
 }
+
+// include derived classes
+#include "ActivationLayer.h"
+#include "FullyConnectedLayer.h"
+#include "AdditionLayer.h"
+#include "ConvolutionLayer.h"
+#include "PoolingLayer.h"
+#include "ReshapeLayer.h"
 
 #ifdef __clang__
 #pragma clang diagnostic pop

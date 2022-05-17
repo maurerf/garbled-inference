@@ -1,6 +1,8 @@
 #include <algorithm>
 #include "Layer.h"
 
+// Implementation of all constructors and member functions of GarbledInference::Layer and derived classes thereof.
+
 // Constructors
 GarbledInference::Layer::Layer(std::vector<GarbledInference::ParameterMatrix>& weightMatrices, std::vector<GarbledInference::LAYER_TYPE>& layerTypes)
 : _weights(weightMatrices.front())
@@ -111,7 +113,7 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
 #endif
     GarbledInference::Neurons output;
 
-    //TODO: impl for more dims / depth
+    //TODO: impl for more than 1 feature
 
     const auto inputHeight = input.rows();
     const auto inputWidth = input.cols();
