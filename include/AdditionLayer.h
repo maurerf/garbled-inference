@@ -8,7 +8,7 @@ namespace GarbledInference {
     class AdditionLayer : public Layer {
     public:
         // Constructors
-        AdditionLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+        AdditionLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
 
         // Member functions
         /**

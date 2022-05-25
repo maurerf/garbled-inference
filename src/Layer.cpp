@@ -4,7 +4,7 @@
 // Implementation of all constructors and member functions of GarbledInference::Layer and derived classes thereof.
 
 // Constructors
-GarbledInference::Layer::Layer(std::vector<GarbledInference::ParameterMatrix>& weightMatrices, std::vector<GarbledInference::LAYER_TYPE>& layerTypes)
+GarbledInference::Layer::Layer(std::vector<GarbledInference::Parameters>& weightMatrices, std::vector<GarbledInference::LAYER_TYPE>& layerTypes)
 : _weights(weightMatrices.front())
 {
     // recursively init next layer
@@ -40,7 +40,7 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::ParameterMatrix>& w
 // Member Functions
 GarbledInference::Neurons GarbledInference::Layer::propagateForward(const GarbledInference::Neurons& input) noexcept {
 #ifdef DEBUG_LAYERS
-    std::cout << input << std::endl << std::endl;
+    // std::cout << input << std::endl << std::endl; TODO: fixme
 #endif
     if(_nextLayer == nullptr) {
         return process(input);
@@ -67,7 +67,13 @@ inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(cons
     std::cout << "Processing activation layer!" << std::endl;
 #endif
 
-    return input.unaryExpr(&activation);
+    Neurons output;
+
+    for(const auto& d : input) {
+        output.emplace_back(d.unaryExpr(&activation));
+    }
+
+    return output;
 }
 
 inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(const GarbledInference::Neurons& input) noexcept {
@@ -76,7 +82,21 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
     std::cout << "Processing fully connected layer!" << std::endl;
 #endif
 
-    return input * _weights;
+    Neurons output;
+
+    for(size_t d = 0; d < input.size(); d++) {
+
+        //TODO: can i make this if constexpr?
+        if (std::holds_alternative<double>(_weights[d])) {
+            output.emplace_back(input[d] * std::get<double>(_weights[d]));
+            continue;
+        }
+        if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
+            output.emplace_back(input[d] * std::get<ParameterMatrix>(_weights[d]));
+        }
+    }
+
+    return output;
 }
 
 inline GarbledInference::Neurons GarbledInference::AdditionLayer::process(const GarbledInference::Neurons &input) noexcept {
@@ -85,10 +105,32 @@ inline GarbledInference::Neurons GarbledInference::AdditionLayer::process(const 
     std::cout << "Processing max-pooling layer!" << std::endl;
 #endif
 
-    return input + _weights;
+    Neurons output;
+
+    for(size_t d = 0; d < input.size(); d++) {
+
+        //TODO: can i make this if constexpr?
+        if (std::holds_alternative<double>(_weights[d])) {
+
+            /*
+             * Eigen3 does not have scalar addition for matrices...
+             *
+             * https://stackoverflow.com/questions/65455597/adding-scalar-to-eigen-matrix-vector
+             */
+            const ParameterMatrix addend = ParameterMatrix::Ones(input[d].rows(), input[d].cols()) * std::get<double>(_weights[d]);
+
+            output.emplace_back(input[d] + addend);
+            continue;
+        }
+        if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
+            output.emplace_back(input[d] + std::get<ParameterMatrix>(_weights[d]));
+        }
+    }
+
+    return output;
 }
 
-template<size_t kernel_size, size_t stride>
+template<Eigen::Index kernel_size, Eigen::Index stride>
 inline GarbledInference::Neurons GarbledInference::MaxPoolingLayer<kernel_size, stride>::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
@@ -96,11 +138,18 @@ inline GarbledInference::Neurons GarbledInference::MaxPoolingLayer<kernel_size, 
 #endif
 
     Neurons output;
-    //TODO for n dims
-    for(size_t x = 0; x < static_cast<size_t>(input.rows()); x += stride) {
-        for(size_t y = 0; y < static_cast<size_t>(input.cols()); y += stride) {
-            const auto poolBlock = input.block(x,y, x + kernel_size - 1, y + kernel_size - 1);
-            output(x/stride, y/stride) = poolBlock.maxCoeff();
+
+    for(size_t d = 0; d < input.size(); d++) {
+
+        const auto inputWidth = input[d].cols();
+        const auto inputHeight = input[d].rows();
+
+        //TODO for n dims
+        for (Eigen::Index x = 0; x < inputWidth; x += stride) {
+            for (Eigen::Index y = 0; y < inputHeight; y += stride) {
+                const auto poolBlock = input[d].block(x, y, x + kernel_size - 1, y + kernel_size - 1);
+                output[d](x / stride, y / stride) = poolBlock.maxCoeff();
+            }
         }
     }
     return output;
@@ -109,26 +158,34 @@ inline GarbledInference::Neurons GarbledInference::MaxPoolingLayer<kernel_size, 
 inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
-    std::cout << "Processing addition layer!" << std::endl;
+    std::cout << "Processing convolution layer!" << std::endl;
 #endif
-    GarbledInference::Neurons output;
 
-    //TODO: impl for more than 1 feature
+    Neurons output;
 
-    const auto inputHeight = input.rows();
-    const auto inputWidth = input.cols();
-    const auto kernelWidth = _weights.rows();
-    const auto kernelHeight = _weights.cols();
+    for(size_t d = 0; d < input.size(); d++) {
 
-    // for each pixel...
-    for(auto x = 0; x < inputWidth; x++) {
-        for(auto y = 0; y < inputHeight; y++) {
-            //...iterate along its kernel
-            for(auto k_x = 0; k_x < kernelWidth; k_x++) {
-                for(auto k_y = 0; k_y < kernelHeight; k_y++) {
-                    if(x > kernelWidth/2 and y > kernelHeight/2) {//boundary handling
-                        // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down TODO: verify these divisions are rounded down
-                        output(x, y) *= ( input(x + k_x - kernelWidth/2, y + k_y - kernelHeight/2) * _weights(k_x, k_y));
+        // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check w/ exception
+        const auto weightMatrix = std::get<ParameterMatrix>(_weights[d]);
+
+        const auto inputWidth = input[d].cols();
+        const auto inputHeight = input[d].rows();
+        const auto kernelWidth = weightMatrix.cols();
+        const auto kernelHeight = weightMatrix.rows();
+
+        // for each pixel...
+        for (auto x = 0; x < inputWidth; x++) {
+            for (auto y = 0; y < inputHeight; y++) {
+                //...iterate along its kernel
+                for (auto k_x = 0; k_x < kernelWidth; k_x++) {
+                    for (auto k_y = 0; k_y < kernelHeight; k_y++) {
+                        if (x > kernelWidth / 2 and y > kernelHeight / 2) {//boundary handling
+                            // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down
+                            output[d](x, y) *=
+                                    (input[d](x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
+                                    *
+                                    weightMatrix(k_x, k_y));
+                        }
                     }
                 }
             }
@@ -148,6 +205,13 @@ inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const G
 
     //TODO allow reshape to m dimensions (currently : n->2)
     Neurons output (input);
-    output.reshaped<Eigen::AutoOrder>(_weights(0,0), _weights(0,1));
+
+    // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
+    const auto x_shape = std::get<double>(_weights[0]);
+    const auto y_shape = std::get<double>(_weights[1]);
+
+    for(auto& out : output) {
+        out.reshaped<Eigen::AutoOrder>(x_shape, y_shape);
+    }
     return output;
 }

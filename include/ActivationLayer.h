@@ -8,7 +8,7 @@ namespace GarbledInference {
     class ActivationLayer : public Layer {
     public:
         // Constructors
-        ActivationLayer(std::vector <ParameterMatrix> &weightMatrices, std::vector <LAYER_TYPE> &layerTypes) : Layer(
+        ActivationLayer(std::vector <Parameters> &weightMatrices, std::vector <LAYER_TYPE> &layerTypes) : Layer(
                 weightMatrices, layerTypes) {}
 
         // Member functions
@@ -28,3 +28,4 @@ namespace GarbledInference {
         static constexpr double activation(const double &i) noexcept;
     };
 }
+

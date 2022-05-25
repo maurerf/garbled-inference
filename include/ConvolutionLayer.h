@@ -8,7 +8,7 @@ namespace GarbledInference {
     class ConvolutionLayer : public Layer {
     public:
         // Constructors
-        ConvolutionLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+        ConvolutionLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
 
         // Member functions
         /**

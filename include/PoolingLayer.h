@@ -5,11 +5,11 @@ namespace GarbledInference {
     /**
     * TODO: Doxygen compliant interface comment.
     */
-    template<size_t kernel_size, size_t stride>
+    template<Eigen::Index kernel_size, Eigen::Index stride>
     class MaxPoolingLayer : public Layer {
     public:
         // Constructors
-        MaxPoolingLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+        MaxPoolingLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
 
         // Member functions
         /**

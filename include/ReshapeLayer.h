@@ -8,7 +8,7 @@ namespace GarbledInference {
     class ReshapeLayer : public Layer {
     public:
         // Constructors
-        ReshapeLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+        ReshapeLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
 
         // Member functions
         /**

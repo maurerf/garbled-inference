@@ -8,7 +8,7 @@ namespace GarbledInference {
     class FullyConnectedLayer : public Layer {
     public:
         // Constructors
-        FullyConnectedLayer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+        FullyConnectedLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
 
         // Member functions
         /**

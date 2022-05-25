@@ -5,6 +5,7 @@
 #include <stdexcept>
 #include <iostream>
 #include <eigen3/Eigen/Eigen>
+#include <variant>
 
 //TODO: fix weak-vtables warning in clang
 #ifdef __clang__
@@ -14,24 +15,16 @@
 
 // define what activation function to use
 #define GI_ACTIVATION_RELU
-//#define DEBUG_LAYERS
+#define DEBUG_LAYERS
 
 namespace GarbledInference {
-
-    /**
-     * TODO
-     *  replicate mnist in NeuralNet/main
-     *  change file structure
-     *
-     */
-
-
 
     /**
     * TODO: Doxygen compliant interface comment.
     */
     typedef Eigen::MatrixXd ParameterMatrix;
-    typedef /*Eigen::RowVectorXd*/ Eigen::MatrixXd Neurons; //TODO: vector or matrix? ask tatjana
+    typedef std::vector<std::variant<double, ParameterMatrix>> Parameters;
+    typedef std::vector<Eigen::MatrixXd> Neurons; //TODO: vector or matrix? ask tatjana
 
 
 
@@ -58,7 +51,7 @@ namespace GarbledInference {
          * @param weightMatrices nonempty list of layer weight matrices
          * @param layerTypes nonempty list of layer type
          */
-        Layer(std::vector<ParameterMatrix>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes);
+        Layer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes);
 
         Layer() = delete;
 
@@ -94,7 +87,7 @@ namespace GarbledInference {
         inline virtual Neurons process(const Neurons & input) noexcept { return input; } //TODO: make pure virtual
 
 
-        GarbledInference::ParameterMatrix _weights;
+        GarbledInference::Parameters _weights;
         //TODO: bias vector? ask tatjana
     private:
         std::unique_ptr<Layer> _nextLayer;
