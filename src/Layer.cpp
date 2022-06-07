@@ -222,15 +222,25 @@ inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const G
     std::cout << "Processing reshape layer!" << std::endl;
 #endif
 
-    //TODO allow reshape to m dimensions (currently always reshapes to 2d)
-    Neurons output (input);
+    // create 1d "matrix" to append all neurons to
+    Eigen::MatrixXd list = {};
+    list.resize(static_cast<long>(input.size()) * input.front().rows() * input.front().cols(), 1);
+    long c = 0; // entry counter for list
+
+    // append all entries from all feature maps to 1d vector
+    for(size_t d = 0; d < input.size(); d++) {
+        for(auto x = 0; x < input[d].rows(); x++) {
+            for(auto y = 0; y < input[d].cols(); y++) {
+                list(c,0) = input[d](x,y);
+                c++;
+            }
+        }
+    }
 
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
-    const auto x_shape = std::get<double>(_weights[0]);
-    const auto y_shape = std::get<double>(_weights[1]);
+    const auto x_size = static_cast<const size_t>(std::get<double>(_weights[0]));
+    const auto y_size = static_cast<const size_t>(std::get<double>(_weights[1]));
 
-    for(auto& out : output) {
-        out.reshaped<Eigen::AutoOrder>(x_shape, y_shape);
-    }
-    return output;
+    // reshape 1d vector to desired shape, contain it in an std::vector
+    return { list.reshaped<Eigen::AutoOrder>(x_size, y_size) };
 }
