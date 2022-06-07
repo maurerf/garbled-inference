@@ -39,13 +39,16 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::Parameters>& weight
 
 // Member Functions
 GarbledInference::Neurons GarbledInference::Layer::propagateForward(const GarbledInference::Neurons& input) noexcept {
-#ifdef DEBUG_LAYERS
-    // std::cout << input << std::endl << std::endl; TODO: fixme
-#endif
     if(_nextLayer == nullptr) {
+#ifdef DEBUG_LAYERS
+        std::cout << "PropagateForward(): Input size of final layer: " << input.size() << " x " << input.front().rows() << " x " << input.front().cols() << std::endl;
+#endif
         return process(input);
     }
     else {
+#ifdef DEBUG_LAYERS
+        std::cout << "PropagateForward(): Input size: " << input.size() << " x " << input.front().rows() << " x " << input.front().cols() << std::endl;
+#endif
         return _nextLayer->propagateForward(process(input));
     }
 }
@@ -57,8 +60,7 @@ constexpr double GarbledInference::ActivationLayer::activation(const double&  i)
 #ifdef GI_ACTIVATION_RELU
     return (i > 0) ? i : 0.0;
 #endif
-
-    //TODO: more afs
+    //more activation functions here
 }
 
 inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(const GarbledInference::Neurons& input) noexcept {
@@ -85,8 +87,6 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
     Neurons output;
 
     for(size_t d = 0; d < input.size(); d++) {
-
-        //TODO: can i make this if constexpr?
         if (std::holds_alternative<double>(_weights[d])) {
             output.emplace_back(input[d] * std::get<double>(_weights[d]));
             continue;
@@ -102,14 +102,12 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
 inline GarbledInference::Neurons GarbledInference::AdditionLayer::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
-    std::cout << "Processing max-pooling layer!" << std::endl;
+    std::cout << "Processing addition layer!" << std::endl;
 #endif
 
     Neurons output;
 
     for(size_t d = 0; d < input.size(); d++) {
-
-        //TODO: can i make this if constexpr?
         if (std::holds_alternative<double>(_weights[d])) {
 
             /*
@@ -137,17 +135,26 @@ inline GarbledInference::Neurons GarbledInference::MaxPoolingLayer<kernel_size, 
     std::cout << "Processing max-pooling layer!" << std::endl;
 #endif
 
-    Neurons output;
+    Neurons output = Neurons(input.size());
 
+    // process all input feature maps iteratively
     for(size_t d = 0; d < input.size(); d++) {
 
-        const auto inputWidth = input[d].cols();
-        const auto inputHeight = input[d].rows();
+        const auto inputWidth = input[d].rows();
+        const auto inputHeight = input[d].cols();
 
-        //TODO for n dims
-        for (Eigen::Index x = 0; x < inputWidth; x += stride) {
-            for (Eigen::Index y = 0; y < inputHeight; y += stride) {
-                const auto poolBlock = input[d].block(x, y, x + kernel_size - 1, y + kernel_size - 1);
+        // sanity check
+        if(stride > inputWidth or stride > inputHeight) {
+            std::cout << "Warning: Processing max pooling layer with stride greater than input size." << std::endl;
+        }
+
+        // resize output for this feature map TODO: is this correct?
+        output[d].resize((inputWidth) / stride, (inputHeight) / stride);
+
+        // TODO: more efficient resizing
+        for (Eigen::Index x = 0; x < inputWidth - (kernel_size - 1); x += stride) {
+            for (Eigen::Index y = 0; y < inputHeight - (kernel_size - 1); y += stride) {
+                auto poolBlock = input[d].block(x, y, kernel_size, kernel_size);
                 output[d](x / stride, y / stride) = poolBlock.maxCoeff();
             }
         }
@@ -155,36 +162,50 @@ inline GarbledInference::Neurons GarbledInference::MaxPoolingLayer<kernel_size, 
     return output;
 }
 
+
 inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
     std::cout << "Processing convolution layer!" << std::endl;
 #endif
 
-    Neurons output;
+    // init output
+    Neurons output = Neurons(_weights.size());
 
-    for(size_t d = 0; d < input.size(); d++) {
+    // handle all feature maps of output iteratively (f)
+    for(size_t f = 0; f < _weights.size(); f++) {
+        // resize output feature map
+        output[f].resize(input.front().rows(), input.front().cols());
 
-        // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check w/ exception
-        const auto weightMatrix = std::get<ParameterMatrix>(_weights[d]);
+        // for each input... (d)
+        for (size_t d = 0; d < input.size(); d++) {
 
-        const auto inputWidth = input[d].cols();
-        const auto inputHeight = input[d].rows();
-        const auto kernelWidth = weightMatrix.cols();
-        const auto kernelHeight = weightMatrix.rows();
+            // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check w/ exception
+            const auto weightMatrix = std::get<ParameterMatrix>(_weights[f]);
 
-        // for each pixel...
-        for (auto x = 0; x < inputWidth; x++) {
-            for (auto y = 0; y < inputHeight; y++) {
-                //...iterate along its kernel
-                for (auto k_x = 0; k_x < kernelWidth; k_x++) {
-                    for (auto k_y = 0; k_y < kernelHeight; k_y++) {
-                        if (x > kernelWidth / 2 and y > kernelHeight / 2) {//boundary handling
-                            // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down
-                            output[d](x, y) *=
-                                    (input[d](x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
-                                    *
-                                    weightMatrix(k_x, k_y));
+            const auto inputWidth = input[d].rows();
+            const auto inputHeight = input[d].cols();
+            const auto kernelWidth = weightMatrix.rows();
+            const auto kernelHeight = weightMatrix.cols();
+
+            // for each pixel... (x,y)
+            for (auto x = 0; x < inputWidth; x++) {
+                for (auto y = 0; y < inputHeight; y++) {
+                    //...iterate along its kernel (k_x, k_y)
+                    for (auto k_x = 0; k_x < kernelWidth; k_x++) {
+                        for (auto k_y = 0; k_y < kernelHeight; k_y++) {
+                            //boundary handling ("zero-padding"):
+                            if (
+                                    x > kernelWidth / 2 and x < inputWidth - kernelWidth / 2
+                                    and y > kernelHeight / 2 and y < inputHeight - kernelHeight / 2
+                            ) {
+                                // ... and add result of convolution to current feature map (f)
+                                output[f](x, y) +=
+                                        // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down TODO verify
+                                        (input[d](x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
+                                         *
+                                         weightMatrix(k_x, k_y));
+                            }
                         }
                     }
                 }
@@ -192,9 +213,7 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
         }
     }
 
-
-    //TODO
-    return input;
+    return output;
 }
 
 inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const GarbledInference::Neurons &input) noexcept {
@@ -203,7 +222,7 @@ inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const G
     std::cout << "Processing reshape layer!" << std::endl;
 #endif
 
-    //TODO allow reshape to m dimensions (currently : n->2)
+    //TODO allow reshape to m dimensions (currently always reshapes to 2d)
     Neurons output (input);
 
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception

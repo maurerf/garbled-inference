@@ -13,6 +13,7 @@ namespace GarbledInference {
         // Member functions
         /**
          * TODO
+         * Note that stride = 1.
          *
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process

@@ -23,8 +23,8 @@ namespace GarbledInference {
     * TODO: Doxygen compliant interface comment.
     */
     typedef Eigen::MatrixXd ParameterMatrix;
-    typedef std::vector<std::variant<double, ParameterMatrix>> Parameters;
-    typedef std::vector<Eigen::MatrixXd> Neurons; //TODO: vector or matrix? ask tatjana
+    typedef std::vector<std::variant<double, ParameterMatrix>> Parameters; //size of vector = number of output feature maps
+    typedef std::vector<Eigen::MatrixXd> Neurons; // size of vector = depth of input
 
 
 

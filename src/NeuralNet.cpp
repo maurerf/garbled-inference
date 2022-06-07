@@ -246,14 +246,8 @@ GarbledInference::NeuralNet::NeuralNet() {
             add3_w
     };
 
-//TODO: fixme
-    if(MNIST_layers.front() == LAYER_TYPE::FULLY_CONNECTED) {
-        _firstLayer = std::make_unique<GarbledInference::FullyConnectedLayer>(MNIST_weights, MNIST_layers);
-    }
-    else {
-        _firstLayer = std::make_unique<GarbledInference::ActivationLayer>(MNIST_weights, MNIST_layers);
-    }
-
+    // init first layer of net manually
+    _firstLayer = std::make_unique<GarbledInference::ConvolutionLayer>(MNIST_weights, MNIST_layers);
 }
 
 GarbledInference::Neurons GarbledInference::NeuralNet::inference(const GarbledInference::Neurons& input) noexcept {

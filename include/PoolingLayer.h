@@ -20,4 +20,12 @@ namespace GarbledInference {
          */
         Neurons process(const Neurons& input) noexcept override;
     };
+
+    // explicit forward declarations of specialisations
+    //template<>
+    //Neurons MaxPoolingLayer<2, 2>::process(const Neurons &input) noexcept;
+
+    //template<>
+    //Neurons MaxPoolingLayer<3, 3>::process(const Neurons &input) noexcept;
 }
+
