@@ -89,10 +89,9 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
     for(size_t d = 0; d < input.size(); d++) {
         if (std::holds_alternative<double>(_weights[d])) {
             output.emplace_back(input[d] * std::get<double>(_weights[d]));
-            continue;
         }
-        if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
-            output.emplace_back(input[d] * std::get<ParameterMatrix>(_weights[d]));
+        else if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
+            output.emplace_back(std::get<ParameterMatrix>(_weights[d]) * input[d]);
         }
     }
 
@@ -216,6 +215,8 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
     return output;
 }
 
+
+//TODO: this is a bit of a mess and probably doesnt work the same way ONNX runtime reshapes
 inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
