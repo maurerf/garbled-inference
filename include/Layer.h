@@ -88,7 +88,6 @@ namespace GarbledInference {
 
 
         GarbledInference::Parameters _weights;
-        //TODO: bias vector? ask tatjana
     private:
         std::unique_ptr<Layer> _nextLayer;
     };
