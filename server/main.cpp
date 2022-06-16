@@ -8,19 +8,11 @@
 
 #include <iostream>
 
-#include "NeuralNetConfig.h"
-#include "NeuralNet.h"
-
 /*
- * Main function of Garbled Inference user application.
+ * Main function of Garbled Inference data provider.
  */
 int main() {
-    // init dummy image (all zeros) and infer
-    const auto result = GarbledInference::NeuralNet::getInstance().inference({Eigen::Matrix<double, 28,28>::Zero()});
-
-    for(const auto& m : result) {
-        std::cout << m << std::endl;
-    }
+    std::cout << "I will provide data to the client" << std::endl;
 
     return 0;
 }
