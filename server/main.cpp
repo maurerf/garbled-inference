@@ -6,13 +6,13 @@
 #include "doctest/doctest.h"
 #endif
 
-#include <iostream>
+#include "Server.h"
 
 /*
  * Main function of Garbled Inference data provider.
  */
 int main() {
-    std::cout << "I will provide data to the client" << std::endl;
+    [[maybe_unused]] GarbledInference::Networking::Server server = {};
 
     return 0;
 }

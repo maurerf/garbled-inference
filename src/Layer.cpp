@@ -15,25 +15,33 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::Parameters>& weight
     std::cout << "Constructed new layer! " << weightMatrices.size() << " layers remaining." << std::endl;
 #endif
 
-    if(!weightMatrices.empty() && !layerTypes.empty())
+    if(!weightMatrices.empty() && !layerTypes.empty()) {
         switch (layerTypes.front()) {
             case LAYER_TYPE::ACTIVATION :
-                _nextLayer = std::make_unique<GarbledInference::ActivationLayer>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::ActivationLayer>(weightMatrices, layerTypes);
+                break;
             case LAYER_TYPE::FULLY_CONNECTED :
-                _nextLayer = std::make_unique<GarbledInference::FullyConnectedLayer>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::FullyConnectedLayer>(weightMatrices, layerTypes);
+                break;
             case LAYER_TYPE::ADDITION :
-                _nextLayer = std::make_unique<GarbledInference::AdditionLayer>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::AdditionLayer>(weightMatrices, layerTypes);
+                break;
             case LAYER_TYPE::MAXPOOL_2 :
-                _nextLayer = std::make_unique<GarbledInference::MaxPoolingLayer<2,2>>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::MaxPoolingLayer<2, 2>>(weightMatrices, layerTypes);
+                break;
             case LAYER_TYPE::MAXPOOL_3 :
-                _nextLayer = std::make_unique<GarbledInference::MaxPoolingLayer<3,3>>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::MaxPoolingLayer<3, 3>>(weightMatrices, layerTypes);
+                break;
             case LAYER_TYPE::CONVOLUTION :
-                _nextLayer = std::make_unique<GarbledInference::ConvolutionLayer>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::ConvolutionLayer>(weightMatrices, layerTypes);
+                break;
             case LAYER_TYPE::RESHAPE :
-                _nextLayer = std::make_unique<GarbledInference::ReshapeLayer>(weightMatrices, layerTypes); break;
+                _nextLayer = std::make_unique<GarbledInference::ReshapeLayer>(weightMatrices, layerTypes);
+                break;
         }
-    else
+    } else {
         _nextLayer = nullptr;
+    }
 }
 
 
@@ -44,8 +52,7 @@ GarbledInference::Neurons GarbledInference::Layer::propagateForward(const Garble
         std::cout << "PropagateForward(): Input size of final layer: " << input.size() << " x " << input.front().rows() << " x " << input.front().cols() << std::endl;
 #endif
         return process(input);
-    }
-    else {
+    } else {
 #ifdef DEBUG_LAYERS
         std::cout << "PropagateForward(): Input size: " << input.size() << " x " << input.front().rows() << " x " << input.front().cols() << std::endl;
 #endif
@@ -89,8 +96,7 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
     for(size_t d = 0; d < input.size(); d++) {
         if (std::holds_alternative<double>(_weights[d])) {
             output.emplace_back(input[d] * std::get<double>(_weights[d]));
-        }
-        else if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
+        } else if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
             output.emplace_back(std::get<ParameterMatrix>(_weights[d]) * input[d]);
         }
     }
@@ -177,13 +183,13 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
         output[f].resize(input.front().rows(), input.front().cols());
 
         // for each input... (d)
-        for (size_t d = 0; d < input.size(); d++) {
+        for (const auto & d : input) {
 
             // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check w/ exception
             const auto weightMatrix = std::get<ParameterMatrix>(_weights[f]);
 
-            const auto inputWidth = input[d].rows();
-            const auto inputHeight = input[d].cols();
+            const auto inputWidth = d.rows();
+            const auto inputHeight = d.cols();
             const auto kernelWidth = weightMatrix.rows();
             const auto kernelHeight = weightMatrix.cols();
 
@@ -201,7 +207,7 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
                                 // ... and add result of convolution to current feature map (f)
                                 output[f](x, y) +=
                                         // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down TODO verify
-                                        (input[d](x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
+                                        (d(x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
                                          *
                                          weightMatrix(k_x, k_y));
                             }
@@ -229,19 +235,19 @@ inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const G
     long c = 0; // entry counter for list
 
     // append all entries from all feature maps to 1d vector
-    for(size_t d = 0; d < input.size(); d++) {
-        for(auto x = 0; x < input[d].rows(); x++) {
-            for(auto y = 0; y < input[d].cols(); y++) {
-                list(c,0) = input[d](x,y);
+    for(const auto & d : input) {
+        for(auto x = 0; x < d.rows(); x++) {
+            for(auto y = 0; y < d.cols(); y++) {
+                list(c,0) = d(x,y);
                 c++;
             }
         }
     }
 
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
-    const auto x_size = static_cast<const size_t>(std::get<double>(_weights[0]));
-    const auto y_size = static_cast<const size_t>(std::get<double>(_weights[1]));
+    const auto x_size = static_cast<size_t>(std::get<double>(_weights[0]));
+    const auto y_size = static_cast<size_t>(std::get<double>(_weights[1]));
 
-    // reshape 1d vector to desired shape, contain it in an std::vector
+    // reshape 1d vector to desired shape, contain it in a std::vector
     return { list.reshaped<Eigen::AutoOrder>(x_size, y_size) };
 }
