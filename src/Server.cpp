@@ -1,37 +1,45 @@
 #include "Server.h"
 
-GarbledInference::Networking::Server::Server() {
-    using boost::asio::ip::tcp;
+#include <utility>
 
+GarbledInference::Networking::Server::Server(JoinHandler joinHandler, LeaveHandler leaveHandler, MessageHandler messageHandler, boost::asio::ip::tcp ipVersion, boost::asio::ip::port_type portNum) :
+_ioContext(),
+_acceptor(_ioContext, boost::asio::ip::tcp::endpoint(ipVersion, portNum)),
+_joinHandler(std::move(joinHandler)),
+_leaveHandler(std::move(leaveHandler)),
+_messageHandler(std::move(messageHandler)),
+_connections()
+{ }
+
+void GarbledInference::Networking::Server::run() {
     try {
-        // init tcp objects
-        boost::asio::io_context ioContext;
-        //TODO: ipv6?
-        tcp::acceptor acceptor { ioContext, tcp::endpoint(tcp::v4(), 1337) };
-
-#ifdef  DEBUG_TCP_SERVER
-        std::cout << "Init server!" << std::endl;
-#endif
-
-        while(true) {
-            tcp::socket sock { ioContext };
-            acceptor.accept(sock);
-
-#ifdef  DEBUG_TCP_SERVER
-            std::cout << "Client connected!" << std::endl;
-#endif
-
-            const std::string test_msg { "Hello Client!" };
-            boost::system::error_code error;
-
-            boost::asio::write(sock, boost::asio::buffer(test_msg), error);
-
-
-        }
-
+        startAccept();
+        _ioContext.run();
     } catch (std::exception& e) {
-        //TODO: search for other places in this project where cerr should be used instead of cout
         std::cerr << e.what() << std::endl;
     }
+}
 
+void GarbledInference::Networking::Server::startAccept() {
+    _socket.emplace(_ioContext);
+    auto connection = Connection::Create(std::move(*_socket));
+
+    // asynchronously accept the connection
+    _acceptor.async_accept(*_socket, [this, &connection](const boost::system::error_code& ec){
+        // on connect hook
+        if (!ec) {
+            connection->start(
+                    // message handler
+                    [this](const std::string &message) { _messageHandler(message); },
+                    // error handler
+                    [&, weak = std::weak_ptr(connection)] {
+                        if (auto shared = weak.lock(); shared && _connections.erase(shared)) {
+                            _leaveHandler(shared);
+                        }
+                    }
+            );
+        }
+
+        startAccept();
+    });
 }

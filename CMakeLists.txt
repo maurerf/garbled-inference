@@ -39,7 +39,7 @@ find_lto(CXX)
 # --------------------------------------------------------------------------------
 set(SOURCES          # All .cpp files in src/
     src/NeuralNet.cpp
-        include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h)
+        include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h src/Connection.cpp include/Connection.h include/Client.h src/Client.cpp)
 set(TESTFILES        # All .cpp files in tests/
     tests/main.cpp
 )

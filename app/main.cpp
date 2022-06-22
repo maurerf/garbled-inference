@@ -12,15 +12,33 @@
 
 #include "NeuralNetConfig.h"
 #include "NeuralNet.h"
+#include "Client.h"
 
-#define TCP_SERVER_ADDRESS "localhost"
-#define TCP_SERVER_PORT "1337"
-
-#define DEBUG_TCP_CLIENT
 
 /*
  * Main function of Garbled Inference user application.
  */
+int main() {
+    // create client & connect to server
+    using namespace GarbledInference::Networking;
+    [[maybe_unused]] Client client {
+        [](const std::string& message) {
+            std::cout << "Client: New message: " << message << std::endl;
+        }
+    };
+
+    // init dummy image (all zeros) and infer (TODO read from file)
+    const auto result = GarbledInference::NeuralNet::getInstance().inference({Eigen::Matrix<double, 28,28>::Zero()});
+
+    for(const auto& m : result) {
+        std::cout << m << std::endl;
+    }
+
+    return 0;
+}
+
+//TODO: remove old client main
+/*
 int main() {
 
     //TODO: isolate all of this into separate class
@@ -77,3 +95,4 @@ int main() {
 
     return 0;
 }
+ */
