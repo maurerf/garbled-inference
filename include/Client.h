@@ -14,6 +14,7 @@ namespace GarbledInference::Networking {
         void start();
         void stop();
         void post(const std::string& message);
+        std::string get();
 
     private:
         void read();
@@ -26,6 +27,7 @@ namespace GarbledInference::Networking {
         // TODO: i forgot why this max size is necessary
         boost::asio::streambuf _streamBuf{65536};
 
+        std::stringstream _incomingMessage {};
         std::optional<std::string> _outgoingMessage {};
 
         MessageHandler _messageHandler;

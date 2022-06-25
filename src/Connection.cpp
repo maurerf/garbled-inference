@@ -13,32 +13,33 @@ namespace GarbledInference::Networking {
     void Connection::start(MessageHandler&& messageHandler, ErrorHandler&& errorHandler) {
         _messageHandler = std::move(messageHandler);
         _errorHandler = std::move(errorHandler);
-
-        asyncRead();
     }
 
     void Connection::post(const std::string &message) {
         _outgoingMessage.emplace(message);
+
+        std::cout << "ich schicke nun: " << _outgoingMessage.value() << std::endl;
+
         asyncWrite();
     }
 
     void Connection::asyncRead() {
         // TODO: different delimiter?
-        boost::asio::async_read_until(_socket, _streamBuf, "\n", [this]
+        boost::asio::async_read_until(_socket, _streamBuf, "\n", [shared_this = shared_from_this()]
                 (boost::system::error_code ec, size_t bytesTransferred) {
             if (ec) {
-                _socket.close(ec);
+                shared_this->_socket.close(ec);
 
-                _errorHandler();
+                shared_this->_errorHandler();
                 return;
             }
 
             std::stringstream message;
-            message << _identifier << ": " << std::istream(&(_streamBuf)).rdbuf();
-            _streamBuf.consume(bytesTransferred);
+            message << shared_this->_identifier << ": " << std::istream(&(shared_this->_streamBuf)).rdbuf();
+            shared_this->_streamBuf.consume(bytesTransferred);
 
-            _messageHandler(message.str());
-            asyncRead();
+            shared_this->_messageHandler(message.str());
+            shared_this->asyncRead();
         });
     }
 
@@ -51,6 +52,8 @@ namespace GarbledInference::Networking {
                 _errorHandler();
                 return;
             }
+
+            std::cout << "server hat geschickt: " << _outgoingMessage.value() << std::endl;
         });
     }
 

@@ -7,7 +7,7 @@
 
 #include "Connection.h"
 
-#define DEBUG_TCP_SERVER
+//#define DEBUG_TCP_SERVER
 
 namespace GarbledInference::Networking {
         class Server {
@@ -48,7 +48,7 @@ namespace GarbledInference::Networking {
             boost::asio::ip::tcp::acceptor _acceptor;
             std::optional<boost::asio::ip::tcp::socket> _socket;
 
-            void startAccept();
+            void acceptNextConnection();
 
             JoinHandler _joinHandler;
             LeaveHandler _leaveHandler;

@@ -17,10 +17,10 @@ int main() {
     [[maybe_unused]] Server server
     {
         [](std::shared_ptr<Connection> connection) {
-            std::cout << "Server: Connection started with: " << connection->getIdentifier() << std::endl;
+            std::cout << "Server: New connection opened: " << connection->getIdentifier() << std::endl;
         },
         [](std::shared_ptr<Connection> connection) {
-            std::cout << "Server: Connection ended with: " << connection->getIdentifier() << std::endl;
+            std::cout << "Server: Connection terminated: " << connection->getIdentifier() << std::endl;
         },
         [](const std::string& message) {
             std::cout << "Server: New message: " << message << std::endl;

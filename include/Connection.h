@@ -3,12 +3,13 @@
 #include <boost/asio.hpp>
 #include <memory>
 #include <optional>
+#include <iostream>
 
 namespace GarbledInference::Networking {
     typedef std::function<void(std::string)> MessageHandler;
     typedef std::function<void()> ErrorHandler;
 
-    class Connection {
+    class Connection : public std::enable_shared_from_this<Connection> {
     public:
 
         //TODO: just return to normal constructor?

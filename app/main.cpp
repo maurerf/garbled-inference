@@ -27,12 +27,16 @@ int main() {
         }
     };
 
+    client.start();
+
+    std::cout << client.get();
+
     // init dummy image (all zeros) and infer (TODO read from file)
-    const auto result = GarbledInference::NeuralNet::getInstance().inference({Eigen::Matrix<double, 28,28>::Zero()});
+    /*const auto result = GarbledInference::NeuralNet::getInstance().inference({Eigen::Matrix<double, 28,28>::Zero()});
 
     for(const auto& m : result) {
         std::cout << m << std::endl;
-    }
+    }*/
 
     return 0;
 }

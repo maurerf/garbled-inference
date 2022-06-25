@@ -3,29 +3,31 @@
 #include <utility>
 
 GarbledInference::Networking::Server::Server(JoinHandler joinHandler, LeaveHandler leaveHandler, MessageHandler messageHandler, boost::asio::ip::tcp ipVersion, boost::asio::ip::port_type portNum) :
-_ioContext(),
 _acceptor(_ioContext, boost::asio::ip::tcp::endpoint(ipVersion, portNum)),
 _joinHandler(std::move(joinHandler)),
 _leaveHandler(std::move(leaveHandler)),
 _messageHandler(std::move(messageHandler)),
 _connections()
-{ }
+{}
 
 void GarbledInference::Networking::Server::run() {
     try {
-        startAccept();
+        acceptNextConnection();
         _ioContext.run();
     } catch (std::exception& e) {
         std::cerr << e.what() << std::endl;
     }
 }
 
-void GarbledInference::Networking::Server::startAccept() {
+void GarbledInference::Networking::Server::acceptNextConnection() {
     _socket.emplace(_ioContext);
-    auto connection = Connection::Create(std::move(*_socket));
 
     // asynchronously accept the connection
-    _acceptor.async_accept(*_socket, [this, &connection](const boost::system::error_code& ec){
+    _acceptor.async_accept(_socket.value(), [this](const boost::system::error_code& ec){
+        auto connection = Connection::Create(std::move(_socket.value()));
+
+        if(_joinHandler) _joinHandler(connection);
+
         // on connect hook
         if (!ec) {
             connection->start(
@@ -38,8 +40,9 @@ void GarbledInference::Networking::Server::startAccept() {
                         }
                     }
             );
+            connection->post("Hello from the server!\n");
         }
 
-        startAccept();
+        acceptNextConnection();
     });
 }

@@ -1,6 +1,7 @@
 #include "Client.h"
 
 #include <utility>
+#include <iostream>
 
 #define TCP_SERVER_ADDRESS "localhost"
 #define TCP_SERVER_PORT "1337"
@@ -15,9 +16,11 @@ namespace GarbledInference::Networking {
     }
 
     void Client::start() {
-        boost::asio::async_connect(_socket, _endpoints, [this](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
-            if (!ec)
-                read();
+        std::cout << "Client: Starting." << std::endl;
+        boost::asio::async_connect(_socket, _endpoints, [](boost::system::error_code ec, boost::asio::ip::tcp::endpoint) {
+            if (!ec) {
+                std::cout << "Client: Connected." << std::endl;
+            }
         });
 
         _ioContext.run();
@@ -26,31 +29,40 @@ namespace GarbledInference::Networking {
     void Client::stop() {
         boost::system::error_code ec;
         _socket.close(ec);
+
+        std::cout << "Client: Stopping." << std::endl;
     }
 
     void Client::post(const std::string &message) {
         _outgoingMessage.emplace(message);
-
         write();
     }
 
+    std::string Client::get() {
+        read();
+        //TODO: just use synchronous read?
+        while(std::string_view(_incomingMessage.str()).back() != '\n') {
+            std::cout << _incomingMessage.str() << std::endl;
+        }
+        return _incomingMessage.str();
+    }
+
     void Client::read() {
+        _incomingMessage.clear();
         boost::asio::async_read_until(_socket, _streamBuf, "\n", [this](boost::system::error_code ec, size_t /*bytesTransferred*/) {
             // on read hook
             if (ec) {
                 stop();
                 return;
             }
+            std::cout <<  "kam was" << std::endl;
 
-            std::stringstream message;
-            message << std::istream{&_streamBuf}.rdbuf();
-            _messageHandler(message.str());
-            read();
+            _incomingMessage << std::istream{&_streamBuf}.rdbuf();
+            _messageHandler(_incomingMessage.str());
         });
     }
 
 
-    //TODO: make write blocking on client side
     void Client::write() {
         boost::asio::async_write(_socket, boost::asio::buffer(_outgoingMessage.value()), [this](boost::system::error_code ec, size_t /*bytesTransferred*/) {
             // on write hook
@@ -62,4 +74,6 @@ namespace GarbledInference::Networking {
             _outgoingMessage.reset();
         });
     }
+
+
 }
