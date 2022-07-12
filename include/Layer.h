@@ -15,7 +15,9 @@
 
 // define what activation function to use
 #define GI_ACTIVATION_RELU
+
 #define DEBUG_LAYERS
+//#define DEBUG_LAYERS_VERBOSE
 
 namespace GarbledInference {
 
@@ -23,7 +25,8 @@ namespace GarbledInference {
     * TODO: Doxygen compliant interface comment.
     */
     typedef Eigen::MatrixXd ParameterMatrix;
-    typedef std::vector<std::variant<double, ParameterMatrix>> Parameters; //size of vector = number of output feature maps
+    typedef std::vector<std::vector<std::variant<double, ParameterMatrix>>> Parameters; //size of inner vector = number of input feature maps. size of outer vector = number of output feature maps
+    //TODO: most layer types (currently all but conv) use the same weight matrix for each input feature map. maybe change Parameters respecting that...
     typedef std::vector<Eigen::MatrixXd> Neurons; // size of vector = depth of input
 
 

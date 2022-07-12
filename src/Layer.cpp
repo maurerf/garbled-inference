@@ -47,6 +47,13 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::Parameters>& weight
 
 // Member Functions
 GarbledInference::Neurons GarbledInference::Layer::propagateForward(const GarbledInference::Neurons& input) noexcept {
+
+#ifdef DEBUG_LAYERS_VERBOSE
+    for(const auto& matrix : input) {
+        std::cout << "\n" << matrix << std::endl;
+    }
+#endif
+
     if(_nextLayer == nullptr) {
 #ifdef DEBUG_LAYERS
         std::cout << "PropagateForward(): Input size of final layer: " << input.size() << " x " << input.front().rows() << " x " << input.front().cols() << std::endl;
@@ -93,11 +100,16 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
 
     Neurons output;
 
+
+
+
     for(size_t d = 0; d < input.size(); d++) {
-        if (std::holds_alternative<double>(_weights[d])) {
-            output.emplace_back(input[d] * std::get<double>(_weights[d]));
-        } else if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
-            output.emplace_back(std::get<ParameterMatrix>(_weights[d]) * input[d]);
+        // todo: assert: _weights[d].size == 1
+        const auto w = _weights[d].front();
+        if (std::holds_alternative<double>(w)) {
+            output.emplace_back(input[d] * std::get<double>(w));
+        } else if (std::holds_alternative<ParameterMatrix>(w)) {
+            output.emplace_back(std::get<ParameterMatrix>(w) * input[d]);
         }
     }
 
@@ -113,20 +125,22 @@ inline GarbledInference::Neurons GarbledInference::AdditionLayer::process(const 
     Neurons output;
 
     for(size_t d = 0; d < input.size(); d++) {
-        if (std::holds_alternative<double>(_weights[d])) {
+        // todo: assert: _weights[d].size == 1
+        const auto w = _weights[d].front();
+        if (std::holds_alternative<double>(w)) {
 
             /*
              * Eigen3 does not have scalar addition for matrices...
              *
              * https://stackoverflow.com/questions/65455597/adding-scalar-to-eigen-matrix-vector
              */
-            const ParameterMatrix addend = ParameterMatrix::Ones(input[d].rows(), input[d].cols()) * std::get<double>(_weights[d]);
+            const ParameterMatrix addend = ParameterMatrix::Ones(input[d].rows(), input[d].cols()) * std::get<double>(w);
 
             output.emplace_back(input[d] + addend);
             continue;
         }
-        if (std::holds_alternative<ParameterMatrix>(_weights[d])) {
-            output.emplace_back(input[d] + std::get<ParameterMatrix>(_weights[d]));
+        if (std::holds_alternative<ParameterMatrix>(w)) {
+            output.emplace_back(input[d] + std::get<ParameterMatrix>(w));
         }
     }
 
@@ -183,20 +197,23 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
         output[f].resize(input.front().rows(), input.front().cols());
 
         // for each input... (d)
-        for (const auto & d : input) {
+        for (size_t d = 0; d < input.size(); d++) {
 
-            // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check w/ exception
-            const auto weightMatrix = std::get<ParameterMatrix>(_weights[f]);
+            // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check wMatrix/ exception
+            const auto wMatrix = std::get<ParameterMatrix>(_weights[f][d]);
 
-            const auto inputWidth = d.rows();
-            const auto inputHeight = d.cols();
-            const auto kernelWidth = weightMatrix.rows();
-            const auto kernelHeight = weightMatrix.cols();
+            const auto inputWidth = input[d].rows();
+            const auto inputHeight = input[d].cols();
+            const auto kernelWidth = wMatrix.rows();
+            const auto kernelHeight = wMatrix.cols();
 
             // for each pixel... (x,y)
             for (auto x = 0; x < inputWidth; x++) {
                 for (auto y = 0; y < inputHeight; y++) {
-                    //...iterate along its kernel (k_x, k_y)
+                    //...init pixel with zero...
+                    output[f](x, y) = 0.0;
+
+                    //...then iterate along its kernel (k_x, k_y)
                     for (auto k_x = 0; k_x < kernelWidth; k_x++) {
                         for (auto k_y = 0; k_y < kernelHeight; k_y++) {
                             //boundary handling ("zero-padding"):
@@ -206,10 +223,10 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
                             ) {
                                 // ... and add result of convolution to current feature map (f)
                                 output[f](x, y) +=
-                                        // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down TODO verify
-                                        (d(x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
+                                        // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down TODO verify correctness
+                                        (input[d](x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
                                          *
-                                         weightMatrix(k_x, k_y));
+                                         wMatrix(k_x, k_y));
                             }
                         }
                     }
@@ -245,8 +262,8 @@ inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const G
     }
 
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
-    const auto x_size = static_cast<size_t>(std::get<double>(_weights[0]));
-    const auto y_size = static_cast<size_t>(std::get<double>(_weights[1]));
+    const auto x_size = static_cast<size_t>(std::get<double>(_weights[0].front()));
+    const auto y_size = static_cast<size_t>(std::get<double>(_weights[1].front()));
 
     // reshape 1d vector to desired shape, contain it in a std::vector
     return { list.reshaped<Eigen::AutoOrder>(x_size, y_size) };

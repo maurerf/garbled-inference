@@ -39,7 +39,7 @@ find_lto(CXX)
 # --------------------------------------------------------------------------------
 set(SOURCES          # All .cpp files in src/
     src/NeuralNet.cpp
-        include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h src/Connection.cpp include/Connection.h include/Client.h src/Client.cpp)
+        include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h src/Connection.cpp include/Connection.h include/Client.h src/Client.cpp include/weights/MNIST/convolution_2.h.in include/weights/MNIST/dense_1.h.in include/weights/MNIST/addition_1.h.in include/weights/MNIST/addition_2.h.in include/weights/MNIST/addition_3.h.in include/weights/MNIST/reshape_1.h.in)
 set(TESTFILES        # All .cpp files in tests/
     tests/main.cpp
 )
@@ -55,7 +55,7 @@ add_library(${LIBRARY_NAME} OBJECT ${SOURCES})
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 
 # There's also (probably) doctests within the library, so we need to see this as well.
-target_link_libraries(${LIBRARY_NAME} PUBLIC doctest)
+# target_link_libraries(${LIBRARY_QNAME} PUBLIC doctest)
 
 # Set the compile options you want (change as needed).
 target_set_warnings(${LIBRARY_NAME} ENABLE ALL AS_ERROR ALL DISABLE Annoying)

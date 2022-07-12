@@ -20,7 +20,7 @@
  */
 int main() {
     // create client & connect to server
-    using namespace GarbledInference::Networking;
+    /*using namespace GarbledInference::Networking;
     [[maybe_unused]] Client client {
         [](const std::string& message) {
             std::cout << "Client: New message: " << message << std::endl;
@@ -29,69 +29,23 @@ int main() {
 
     client.start();
 
-    std::cout << client.get();
+    std::cout << client.get();*/
 
     // init dummy image (all zeros) and infer (TODO read from file)
-    /*const auto result = GarbledInference::NeuralNet::getInstance().inference({Eigen::Matrix<double, 28,28>::Zero()});
+    GarbledInference::Neurons input = {Eigen::Matrix<double, 28,28>::Zero()};
 
-    for(const auto& m : result) {
-        std::cout << m << std::endl;
-    }*/
-
-    return 0;
-}
-
-//TODO: remove old client main
-/*
-int main() {
-
-    //TODO: isolate all of this into separate class
-    using boost::asio::ip::tcp;
-    try {
-        // init tcp objects
-        boost::asio::io_context ioContext;
-        tcp::resolver resolver { ioContext };
-        auto endpoints { resolver.resolve(TCP_SERVER_ADDRESS, TCP_SERVER_PORT) };
-        tcp::socket sock { ioContext };
-
-        // connect to tcp socket
-#ifdef DEBUG_TCP_CLIENT
-        std::cout << "Garbled Inference: Connecting to server..." << std::endl;
-#endif
-
-        //TODO: persistent connections
-        boost::asio::connect(sock, endpoints);
-
-#ifdef DEBUG_TCP_CLIENT
-        std::cout << "Garbled Inference: Connection established to " << TCP_SERVER_ADDRESS << ":" << TCP_SERVER_PORT << "." << std::endl;
-#endif
-
-        while(true) {
-            std::array<char, 128> buf {};
-            boost::system::error_code error;
-
-            const auto len = sock.read_some(boost::asio::buffer(buf), error);
-
-            if(error == boost::asio::error::eof) {
-                break;
-            } else if(error) {
-                throw boost::system::system_error(error);
-            }
-
-            std::cout.write(buf.data(), static_cast<long>(len));
-            std::cout << std::endl;
-        }
-
-    } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
-        std::cerr << "GarbledInference: Could not connect to server. Make sure a server instance is running at: " << TCP_SERVER_ADDRESS << ":" << TCP_SERVER_PORT << std::endl;
-
-        exit(EXIT_FAILURE);
+    // make some pixels white
+    for(Eigen::Index row = 0; row < input[0].rows(); row++) {
+        input[0](row, 13) = 1.0;
+        input[0](row, 14) = 1.0;
+        input[0](row, 15) = 1.0;
     }
 
+    for(const auto& m : input) {
+        std::cout << m << std::endl;
+    }
 
-    // init dummy image (all zeros) and infer (TODO read from file)
-    const auto result = GarbledInference::NeuralNet::getInstance().inference({Eigen::Matrix<double, 28,28>::Zero()});
+    const auto result = GarbledInference::NeuralNet::getInstance().inference(input);
 
     for(const auto& m : result) {
         std::cout << m << std::endl;
@@ -99,4 +53,5 @@ int main() {
 
     return 0;
 }
- */
+
+

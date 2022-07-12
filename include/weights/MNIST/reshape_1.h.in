@@ -1,0 +1,14 @@
+#pragma once
+
+#include "Layer.h"
+
+namespace GarbledInference::Weights::MNIST {
+    const GarbledInference::Parameters RESHAPE_1{
+            {
+                    256.0
+            },
+            {
+                    1.0
+            }
+    };
+}

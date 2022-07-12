@@ -8,7 +8,7 @@ DIM_X = 256
 #DIM_Z = ?
 
 c = 0
-data = np.load('Parameter193.npy')
+data = np.load('PARAMETER.npy')
 #print("Eigen::MatrixXd {")
 print("{")
 for cuboid in data:
