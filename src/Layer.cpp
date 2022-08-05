@@ -264,8 +264,6 @@ inline GarbledInference::Neurons GarbledInference::FlattenLayer::process(const G
         }
     }
 
-    std::cout << list << std::endl;
-
     return { list };
 
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
