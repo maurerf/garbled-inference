@@ -31,6 +31,9 @@ include(LTO)
 include(Misc)
 include(Warnings)
 
+# Add TinyGarble subdir
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/TinyGarble/)
+
 # Check for LTO support.
 find_lto(CXX)
 
@@ -45,6 +48,7 @@ set(TESTFILES        # All .cpp files in tests/
 )
 set(LIBRARY_NAME gi-lib)  # Default name for the library built from src/*.cpp (change if you wish)
 
+
 # --------------------------------------------------------------------------------
 #                            Build! (Change as needed)
 # --------------------------------------------------------------------------------
@@ -53,9 +57,13 @@ add_library(${LIBRARY_NAME} OBJECT ${SOURCES})
 
 # Lib needs its header files, and users of the library must also see these (PUBLIC). (No change needed)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
+target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/TinyGarble)
+target_link_libraries(${LIBRARY_NAME} TinyGarble)
+
+
 
 # There's also (probably) doctests within the library, so we need to see this as well.
-# target_link_libraries(${LIBRARY_QNAME} PUBLIC doctest)
+# target_link_libraries(${LIBRARY_NAME} PUBLIC doctest)
 
 # Set the compile options you want (change as needed).
 target_set_warnings(${LIBRARY_NAME} ENABLE ALL AS_ERROR ALL DISABLE Annoying)
