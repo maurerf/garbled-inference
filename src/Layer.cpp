@@ -36,7 +36,7 @@ GarbledInference::Layer::Layer(std::vector<GarbledInference::Parameters>& weight
                 _nextLayer = std::make_unique<GarbledInference::ConvolutionLayer>(weightMatrices, layerTypes);
                 break;
             case LAYER_TYPE::RESHAPE :
-                _nextLayer = std::make_unique<GarbledInference::ReshapeLayer>(weightMatrices, layerTypes);
+                _nextLayer = std::make_unique<GarbledInference::FlattenLayer>(weightMatrices, layerTypes);
                 break;
         }
     } else {
@@ -101,15 +101,13 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
     Neurons output;
 
 
-
-
     for(size_t d = 0; d < input.size(); d++) {
         // todo: assert: _weights[d].size == 1
         const auto w = _weights[d].front();
         if (std::holds_alternative<double>(w)) {
             output.emplace_back(input[d] * std::get<double>(w));
         } else if (std::holds_alternative<ParameterMatrix>(w)) {
-            output.emplace_back(std::get<ParameterMatrix>(w) * input[d]);
+            output.emplace_back(input[d] * std::get<ParameterMatrix>(w));
         }
     }
 
@@ -196,6 +194,13 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
         // resize output feature map
         output[f].resize(input.front().rows(), input.front().cols());
 
+        //...init each pixel with zero... TODO: listenfunktion?
+        for(Eigen::Index x = 0; x < output[f].rows(); x++) {
+            for(Eigen::Index y = 0; y < output[f].cols(); y++) {
+                output[f](x, y) = 0.0;
+            }
+        }
+
         // for each input... (d)
         for (size_t d = 0; d < input.size(); d++) {
 
@@ -210,20 +215,18 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
             // for each pixel... (x,y)
             for (auto x = 0; x < inputWidth; x++) {
                 for (auto y = 0; y < inputHeight; y++) {
-                    //...init pixel with zero...
-                    output[f](x, y) = 0.0;
 
-                    //...then iterate along its kernel (k_x, k_y)
+                    // ... then iterate along its kernel (k_x, k_y),
                     for (auto k_x = 0; k_x < kernelWidth; k_x++) {
                         for (auto k_y = 0; k_y < kernelHeight; k_y++) {
-                            //boundary handling ("zero-padding"):
+                            // ... apply boundary handling ("zero-padding" = ignore out of bounds areas):
                             if (
-                                    x > kernelWidth / 2 and x < inputWidth - kernelWidth / 2
-                                    and y > kernelHeight / 2 and y < inputHeight - kernelHeight / 2
+                                    x + k_x - (kernelWidth / 2) >= 0 and x + k_x - (kernelWidth / 2) < inputWidth
+                                    and y + k_y - (kernelHeight / 2) >= 0 and y + k_y - (kernelHeight / 2) < inputHeight
                             ) {
                                 // ... and add result of convolution to current feature map (f)
                                 output[f](x, y) +=
-                                        // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down TODO verify correctness
+                                        // offset of (0,0) of kernel relative to pixel is half of kernel size, rounded down
                                         (input[d](x + k_x - kernelWidth / 2, y + k_y - kernelHeight / 2)
                                          *
                                          wMatrix(k_x, k_y));
@@ -240,7 +243,7 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
 
 
 //TODO: this is a bit of a mess and probably doesnt work the same way ONNX runtime reshapes
-inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const GarbledInference::Neurons &input) noexcept {
+inline GarbledInference::Neurons GarbledInference::FlattenLayer::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
     std::cout << "Processing reshape layer!" << std::endl;
@@ -248,18 +251,22 @@ inline GarbledInference::Neurons GarbledInference::ReshapeLayer::process(const G
 
     // create 1d "matrix" to append all neurons to
     Eigen::MatrixXd list = {};
-    list.resize(static_cast<long>(input.size()) * input.front().rows() * input.front().cols(), 1);
+    list.resize(1, static_cast<Eigen::Index>(input.size()) * input.front().rows() * input.front().cols());
     long c = 0; // entry counter for list
 
     // append all entries from all feature maps to 1d vector
     for(const auto & d : input) {
         for(auto x = 0; x < d.rows(); x++) {
             for(auto y = 0; y < d.cols(); y++) {
-                list(c,0) = d(x,y);
+                list(0,c) = d(x,y);
                 c++;
             }
         }
     }
+
+    std::cout << list << std::endl;
+
+    return { list };
 
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
     const auto x_size = static_cast<size_t>(std::get<double>(_weights[0].front()));

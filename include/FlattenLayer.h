@@ -5,10 +5,10 @@ namespace GarbledInference {
     /**
     * TODO: Doxygen compliant interface comment.
     */
-    class ReshapeLayer : public Layer {
+    class FlattenLayer : public Layer {
     public:
         // Constructors
-        ReshapeLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
+        FlattenLayer(std::vector<Parameters>& weightMatrices, std::vector<LAYER_TYPE>& layerTypes) : Layer(weightMatrices, layerTypes) {}
 
         // Member functions
         /**

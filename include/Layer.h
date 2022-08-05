@@ -17,7 +17,7 @@
 #define GI_ACTIVATION_RELU
 
 #define DEBUG_LAYERS
-//#define DEBUG_LAYERS_VERBOSE
+#define DEBUG_LAYERS_VERBOSE
 
 namespace GarbledInference {
 
@@ -63,7 +63,7 @@ namespace GarbledInference {
         Layer(Layer&&) = delete;
 
         // Destructor
-        virtual ~Layer() = default;
+        virtual ~Layer() = default; //TODO: fix warning
 
         //Member functions
         /**
@@ -102,7 +102,7 @@ namespace GarbledInference {
 #include "AdditionLayer.h"
 #include "ConvolutionLayer.h"
 #include "PoolingLayer.h"
-#include "ReshapeLayer.h"
+#include "FlattenLayer.h"
 
 #ifdef __clang__
 #pragma clang diagnostic pop

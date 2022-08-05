@@ -23,10 +23,10 @@ GarbledInference::NeuralNet &GarbledInference::NeuralNet::getInstance() {
 GarbledInference::NeuralNet::NeuralNet() {
     GarbledInference::Parameters reshape1_w {
             {
-                256.0
+                1.0
             },
             {
-                1.0
+                256.0
             }
     };
 
