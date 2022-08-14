@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "Layer.h"
+#include "TinyGarbleWrapper.h"
 
 namespace GarbledInference {
 
@@ -12,9 +13,9 @@ namespace GarbledInference {
     public:
         // Constructors
         /**
-         * Creates a new neural net.
+         * Access to the singleton NN.
          */
-        static NeuralNet& getInstance();
+        static NeuralNet &getInstance();
 
         NeuralNet(const NeuralNet&) = delete;
 
@@ -28,7 +29,7 @@ namespace GarbledInference {
          * @param input data to be classified
          * @return mapped feature vector
          */
-        Neurons inference(const Neurons& input) noexcept;
+        Eigen::Index inference(const Neurons& input) noexcept;
 
         NeuralNet& operator=(const NeuralNet&) = delete;
 

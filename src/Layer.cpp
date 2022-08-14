@@ -68,6 +68,7 @@ GarbledInference::Neurons GarbledInference::Layer::propagateForward(const Garble
 }
 
 constexpr double GarbledInference::ActivationLayer::activation(const double&  i) noexcept {
+
 #ifdef GI_ACTIVATION_STEP
     return (i > 0) ? 1.0 : 0.0;
 #endif
@@ -78,6 +79,8 @@ constexpr double GarbledInference::ActivationLayer::activation(const double&  i)
 }
 
 inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(const GarbledInference::Neurons& input) noexcept {
+
+    GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::BOB>("101");
 
 #ifdef DEBUG_LAYERS
     std::cout << "Processing activation layer!" << std::endl;

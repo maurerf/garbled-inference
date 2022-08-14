@@ -4,8 +4,9 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
-#include <eigen3/Eigen/Eigen>
 #include <variant>
+#include <eigen3/Eigen/Eigen>
+#include <TinyGarbleWrapper.h>
 
 //TODO: fix weak-vtables warning in clang
 #ifdef __clang__
@@ -16,8 +17,8 @@
 // define what activation function to use
 #define GI_ACTIVATION_RELU
 
-#define DEBUG_LAYERS
-#define DEBUG_LAYERS_VERBOSE
+//#define DEBUG_LAYERS
+//#define DEBUG_LAYERS_VERBOSE
 
 namespace GarbledInference {
 

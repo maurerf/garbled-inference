@@ -15,12 +15,13 @@ GarbledInference::NeuralNet &GarbledInference::NeuralNet::getInstance() {
 #ifdef __clang__
         [[clang::no_destroy]]
 #endif
-        static NeuralNet singleton {}; //TODO: check: is this a memory leak?
+        static NeuralNet singleton {};
         return singleton;
     }
 }
 
-GarbledInference::NeuralNet::NeuralNet() {
+GarbledInference::NeuralNet::NeuralNet()
+{
     GarbledInference::Parameters reshape1_w {
             {
                 1.0
@@ -65,6 +66,15 @@ GarbledInference::NeuralNet::NeuralNet() {
     _firstLayer = std::make_unique<GarbledInference::ConvolutionLayer>(MNIST_weights, MNIST_layers);
 }
 
-GarbledInference::Neurons GarbledInference::NeuralNet::inference(const GarbledInference::Neurons& input) noexcept {
-    return _firstLayer->propagateForward(input);
+Eigen::Index GarbledInference::NeuralNet::inference(const GarbledInference::Neurons& input) noexcept {
+    const auto result = _firstLayer->propagateForward(input).front()/*only look at topmost layer of result feature map*/;
+    Eigen::Index max_c = 0;
+    //std::cout << result << std::endl;
+    for(Eigen::Index c = 0;  c < result.cols(); c++) {
+        max_c = result(0, c) > result(0, max_c) ? c : max_c;
+    }
+    return max_c;
 }
+
+
+

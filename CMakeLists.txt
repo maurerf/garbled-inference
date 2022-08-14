@@ -42,7 +42,7 @@ find_lto(CXX)
 # --------------------------------------------------------------------------------
 set(SOURCES          # All .cpp files in src/
     src/NeuralNet.cpp
-        include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h src/Connection.cpp include/Connection.h include/Client.h src/Client.cpp include/weights/MNIST/convolution_2.h.in include/weights/MNIST/dense_1.h.in include/weights/MNIST/addition_1.h.in include/weights/MNIST/addition_2.h.in include/weights/MNIST/addition_3.h.in include/weights/MNIST/reshape_1.h.in)
+        include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h src/Connection.cpp include/Connection.h include/Client.h src/Client.cpp include/weights/MNIST/convolution_2.h.in include/weights/MNIST/dense_1.h.in include/weights/MNIST/addition_1.h.in include/weights/MNIST/addition_2.h.in include/weights/MNIST/addition_3.h.in include/weights/MNIST/reshape_1.h.in include/TinyGarbleWrapper.h src/TinyGarbleWrapper.cpp)
 set(TESTFILES        # All .cpp files in tests/
     tests/main.cpp
 )
