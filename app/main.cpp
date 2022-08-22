@@ -9,15 +9,16 @@
 
 #include <TinyGarbleWrapper.h>
 #include <iostream>
-
+#include <chrono> // std::chrono::microseconds
+#include <thread> // std::this_thread::sleep_for
 /*
  * Main function of Garbled Inference user application.
  */
 int main() {
     while(true) {
-        std::cout << "RESULT BOB: "
-                  << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::ALICE>(
-                          "010") << std::endl;
+        std::cout << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::ALICE>("DEADBEEFDEADBEEF") << std::endl << std::endl;
+        //using namespace std::chrono_literals;
+        //std::this_thread::sleep_for(200ms);
     }
 
     // create client & connect to server

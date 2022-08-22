@@ -67,20 +67,36 @@ GarbledInference::Neurons GarbledInference::Layer::propagateForward(const Garble
     }
 }
 
-constexpr double GarbledInference::ActivationLayer::activation(const double&  i) noexcept {
+// note: this required double to be in ieee 754 64 bit format
+inline double GarbledInference::ActivationLayer::activation(const double &input) noexcept {
+
+    // convert double to hex representation
+    std::stringstream ss;
+    ss << std::hex << std::uppercase << *reinterpret_cast<const unsigned long long*>(&input);
+    const std::string input_0x = ss.str();
+
+    std::cout << "input: " << input << " : " << input_0x << std::endl;
+
+    // run GC protocol on hexadecimal string input
+    std::cout << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::BOB>(input_0x) << std::endl;
+
+    // convert hex string output to double
 
 #ifdef GI_ACTIVATION_STEP
     return (i > 0) ? 1.0 : 0.0;
 #endif
 #ifdef GI_ACTIVATION_RELU
-    return (i > 0) ? i : 0.0;
+    return (input > 0) ? input : 0.0;
 #endif
     //more activation functions here
 }
 
 inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(const GarbledInference::Neurons& input) noexcept {
 
-    GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::BOB>("101");
+    //todo: just for timing tests. dont be confused by the 100
+    for(size_t i = 0; i < 10; i++) {
+    }
+    //exit(0);
 
 #ifdef DEBUG_LAYERS
     std::cout << "Processing activation layer!" << std::endl;
@@ -269,10 +285,12 @@ inline GarbledInference::Neurons GarbledInference::FlattenLayer::process(const G
 
     return { list };
 
+    /*
     // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
     const auto x_size = static_cast<size_t>(std::get<double>(_weights[0].front()));
     const auto y_size = static_cast<size_t>(std::get<double>(_weights[1].front()));
 
     // reshape 1d vector to desired shape, contain it in a std::vector
     return { list.reshaped<Eigen::AutoOrder>(x_size, y_size) };
+     */
 }

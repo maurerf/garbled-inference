@@ -32,9 +32,10 @@ std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const
 int main() {
 
     // read test data and labels from input file
+    //todo: debug output
     auto inputList= read_mnist(
-            "/home/fdm/Documents/BA/git/garbled-inference/models/t10k-images.idx3-ubyte",
-            "/home/fdm/Documents/BA/git/garbled-inference/models/t10k-labels.idx1-ubyte"
+            "/home/fdm/Documents/BA/t10k-images.idx3-ubyte",
+            "/home/fdm/Documents/BA/t10k-labels.idx1-ubyte"
     );
 
     size_t imagesClassified = 0;

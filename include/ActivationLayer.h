@@ -25,7 +25,7 @@ namespace GarbledInference {
          * @param i integer input of activation function
          * @return integer output of activation function
          */
-        static constexpr double activation(const double &i) noexcept;
+        static inline double activation(const double &input) noexcept;
     };
 }
 
