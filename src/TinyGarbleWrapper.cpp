@@ -8,13 +8,14 @@ namespace GarbledInference::Garbling {
 
     TinyGarbleWrapper &TinyGarbleWrapper::getInstance() {
         static TinyGarbleWrapper singleton {
-            GarbledInference::Garbling::TinyGarbleWrapper("localhost", 1234, "/home/fdm/Documents/BA/git/garbled-inference/TinyGarble/bin/scd/netlists/hamming_32bit_1cc.scd")
+            GarbledInference::Garbling::TinyGarbleWrapper("localhost", 1234, "/home/fdm/CLionProjects/garbled-inference/netlists/masked_relu64.scd")
         };
         return singleton;
     }
 
     TinyGarbleWrapper::TinyGarbleWrapper(std::string serverAddr, const int &serverPort, std::string scdFileLocation) :
             _port{serverPort},
+            _connfd{-2}, // -2 = connection not yet open, -1 = connection failed
             _scd_file_address{std::move(scdFileLocation)},
             _server_ip{std::move(serverAddr)},
             _p_init_str{ReadFileOrPassHex("0")},
@@ -37,16 +38,17 @@ namespace GarbledInference::Garbling {
         string input_str = ReadFileOrPassHex(input_f_hex_str);
         std::string ans;
 
-        int connfd;
         //TODO: only init this once, not for each evaluation
-        if ((connfd = ServerInit(_port)) == -1) {
-            std::cerr << "Cannot open the socket in port " << _port << std::endl;
-            //TODO: error handling
+        if(_connfd == -2) {
+            if ((_connfd = ServerInit(_port)) == -1) {
+                std::cerr << "Cannot open the socket in port " << _port << std::endl;
+                //TODO: error handling
+            }
         }
 
         GarbleStr(_scd_file_address, _p_init_str, _p_input_str, _init_str,
                   input_str, _clock_cycles, _output_mask, _terminate_period,
-                  _output_mode, _disable_OT, _low_mem_foot, &ans, connfd);
+                  _output_mode, _disable_OT, _low_mem_foot, &ans, _connfd);
 
         return ans;
     }
@@ -58,16 +60,17 @@ namespace GarbledInference::Garbling {
         string input_str = ReadFileOrPassHex(input_f_hex_str);
         std::string ans;
 
-        int connfd;
         //TODO: only init this once, not for each evaluation
-        if ((connfd = ClientInit(_server_ip.c_str(), _port)) == -1) {
-            std::cerr << "Cannot connect to " << _server_ip << ":" << _port << std::endl;
-            //TODO: error handling
+        if(_connfd == -2) {
+            if ((_connfd = ClientInit(_server_ip.c_str(), _port)) == -1) {
+                std::cerr << "Cannot connect to " << _server_ip << ":" << _port << std::endl;
+                //TODO: error handling
+            }
         }
 
         EvaluateStr(_scd_file_address, _p_init_str, _p_input_str, _init_str,
                     input_str, _clock_cycles, _output_mask, _terminate_period,
-                    _output_mode, _disable_OT, _low_mem_foot, &ans, connfd);
+                    _output_mode, _disable_OT, _low_mem_foot, &ans, _connfd);
 
         return ans;
     }

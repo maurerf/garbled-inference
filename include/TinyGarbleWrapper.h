@@ -35,6 +35,7 @@ namespace GarbledInference::Garbling {
 
     private:
         int _port;
+        int _connfd;
         std::string _scd_file_address;
         std::string _server_ip;
         std::string _p_init_str;
