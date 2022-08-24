@@ -1898,7 +1898,7 @@ module relu(g_input, e_input, o);
     .B(_319_),
     .Z(_333_)
   );
-  //todo: caution: 2 lines deleted here
+  //caution: 2 lines deleted here
   assign _044_ = g_input[20];
   assign o[20] = _335_;
   assign _045_ = g_input[21];

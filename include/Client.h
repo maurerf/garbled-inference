@@ -7,7 +7,6 @@ namespace GarbledInference::Networking {
 
     class Client {
     public:
-        //TODO: lots of comments
 
         explicit Client(MessageHandler messageHandler);
 
@@ -24,7 +23,6 @@ namespace GarbledInference::Networking {
         boost::asio::ip::tcp::socket _socket;
         boost::asio::ip::tcp::resolver::results_type _endpoints;
 
-        // TODO: i forgot why this max size is necessary
         boost::asio::streambuf _streamBuf{65536};
 
         std::stringstream _incomingMessage {};

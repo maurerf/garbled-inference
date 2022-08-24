@@ -722,7 +722,7 @@ module relu(g_input, e_input, o);
   wire _0718_;
   wire _0719_;
   wire _0720_;
-  /* TODO: i dont think these are used. cause error on V2SCD.
+  /* i dont think these are used. cause error on V2SCD.
   wire [63:0] _0721_;
   wire [63:0] _0722_;
   wire [63:0] _0723_;
@@ -3876,7 +3876,7 @@ module relu(g_input, e_input, o);
     .B(_0656_),
     .Z(_0667_)
   );
-  /* TODO: i deleted some unsued wires here. caution!.*/
+  /* I deleted some unsued wires here. caution!.*/
   assign _0076_ = g_input[20];
   assign o[20] = _0669_;
   assign _0077_ = g_input[21];

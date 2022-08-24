@@ -40,7 +40,6 @@ namespace GarbledInference::Networking {
 
     std::string Client::get() {
         read();
-        //TODO: just use synchronous read?
         while(std::string_view(_incomingMessage.str()).back() != '\n') {
             std::cout << _incomingMessage.str() << std::endl;
         }

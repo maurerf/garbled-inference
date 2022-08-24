@@ -7,7 +7,9 @@
 namespace GarbledInference {
 
     /**
-    * TODO: Doxygen compliant interface comment.
+     * Represents the entire neural net. Meant to be used as a singleton.
+     *
+     * Manages instances of GarbledInference::Layer.
     */
     class NeuralNet {
     public:
@@ -24,7 +26,7 @@ namespace GarbledInference {
         //Member functions
 
         /**
-         * Infers features from an input vector.
+         * Infers features from an input image.
          *
          * @param input data to be classified
          * @return mapped feature vector

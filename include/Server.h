@@ -17,11 +17,7 @@ namespace GarbledInference::Networking {
             typedef std::function<void(std::shared_ptr<Connection>)> LeaveHandler;
             typedef std::function<void(std::string)> MessageHandler;
 
-            /**
-             * TODO
-             * @param ipVersion IPV4 or IPV6
-             * @param portNum IP port to be used
-             */
+
             Server(JoinHandler joinHandler,
                    LeaveHandler leaveHandler,
                    MessageHandler messageHandler,

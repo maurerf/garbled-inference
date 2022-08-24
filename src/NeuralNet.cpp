@@ -31,8 +31,6 @@ GarbledInference::NeuralNet::NeuralNet()
             }
     };
 
-    //TODO: const correctness for these two?
-
     std::vector<GarbledInference::Parameters> MNIST_weights {
             Weights::MNIST::CONVOLUTION_1,
             Weights::MNIST::ADD_1,

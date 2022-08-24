@@ -1,8 +1,8 @@
-#include "Connection.h" //TODO: remove?
 #include "TinyGarbleWrapper.h"
 
 
 #include <utility>
+#include <iostream>
 
 namespace GarbledInference::Garbling {
 
@@ -18,9 +18,9 @@ namespace GarbledInference::Garbling {
             _connfd{-2}, // -2 = connection not yet open, -1 = connection failed
             _scd_file_address{std::move(scdFileLocation)},
             _server_ip{std::move(serverAddr)},
-            _p_init_str{ReadFileOrPassHex("0")},
-            _p_input_str{ReadFileOrPassHex("0")}, //todo: do i really not need public input?
-            _init_str{ReadFileOrPassHex("0")},
+            _p_init_str{ReadFileOrPassHex("0")}, //unused
+            _p_input_str{ReadFileOrPassHex("0")}, //unused
+            _init_str{ReadFileOrPassHex("0")}, //unused
             //_input_f_hex_str is passed in evaluate()
             _terminate_period{0},
             _clock_cycles{1}, //todo: what exactly does this mean? what is 1 clock cycle
@@ -38,11 +38,9 @@ namespace GarbledInference::Garbling {
         string input_str = ReadFileOrPassHex(input_f_hex_str);
         std::string ans;
 
-        //TODO: only init this once, not for each evaluation
         if(_connfd == -2) {
             if ((_connfd = ServerInit(_port)) == -1) {
                 std::cerr << "Cannot open the socket in port " << _port << std::endl;
-                //TODO: error handling
             }
         }
 
@@ -60,11 +58,9 @@ namespace GarbledInference::Garbling {
         string input_str = ReadFileOrPassHex(input_f_hex_str);
         std::string ans;
 
-        //TODO: only init this once, not for each evaluation
         if(_connfd == -2) {
             if ((_connfd = ClientInit(_server_ip.c_str(), _port)) == -1) {
                 std::cerr << "Cannot connect to " << _server_ip << ":" << _port << std::endl;
-                //TODO: error handling
             }
         }
 

@@ -3,8 +3,10 @@
 namespace GarbledInference {
 
     /**
-    * TODO: Doxygen compliant interface comment.
-    */
+     * This class represents a single max-pooling layer of a neural network.
+     *
+     * The kernel size and stride of the pooling aggregation are set during runtime via templates. It does not use weights.
+     */
     template<Eigen::Index kernel_size, Eigen::Index stride>
     class MaxPoolingLayer : public Layer {
     public:
@@ -13,7 +15,8 @@ namespace GarbledInference {
 
         // Member functions
         /**
-         * TODO
+         * Overrides GarbledInference::Layer's member function.
+         * Cf. documentation of base class.
          *
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process

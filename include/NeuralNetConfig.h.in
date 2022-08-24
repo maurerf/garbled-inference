@@ -5,6 +5,5 @@
  * right definition values. Change the namings as you wish,
  * but make sure they match up with whats in CMakeLists.txt.
  */
-#define NET_DEPTH @NET_DEPTH@
 
-//TODO: do we want to use this?
+/* currently unused */

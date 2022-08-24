@@ -3,8 +3,10 @@
 namespace GarbledInference {
 
     /**
-    * TODO: Doxygen compliant interface comment.
-    */
+     * This class represents a single addition layer of a neural network.
+     *
+     * The input weights of the constructor are expected to be either per feature map or per input data point individually.
+     */
     class AdditionLayer : public Layer {
     public:
         // Constructors
@@ -12,7 +14,8 @@ namespace GarbledInference {
 
         // Member functions
         /**
-         * TODO
+         * Overrides GarbledInference::Layer's member function.
+         * Cf. documentation of base class.
          *
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process

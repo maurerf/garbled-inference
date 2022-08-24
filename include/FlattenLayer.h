@@ -3,7 +3,7 @@
 namespace GarbledInference {
 
     /**
-    * TODO: Doxygen compliant interface comment.
+    * This class represents a single flatten/reshape layer of a neural network.
     */
     class FlattenLayer : public Layer {
     public:
@@ -12,7 +12,8 @@ namespace GarbledInference {
 
         // Member functions
         /**
-         * TODO
+         * Overrides GarbledInference::Layer's member function.
+         * Cf. documentation of base class.
          *
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process

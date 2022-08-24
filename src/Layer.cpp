@@ -93,11 +93,6 @@ inline double GarbledInference::ActivationLayer::activation(const double &input)
 
 inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(const GarbledInference::Neurons& input) noexcept {
 
-    //todo: just for timing tests. dont be confused by the 100
-    for(size_t i = 0; i < 10; i++) {
-    }
-    //exit(0);
-
 #ifdef DEBUG_LAYERS
     std::cout << "Processing activation layer!" << std::endl;
 #endif
@@ -121,7 +116,6 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
 
 
     for(size_t d = 0; d < input.size(); d++) {
-        // todo: assert: _weights[d].size == 1
         const auto w = _weights[d].front();
         if (std::holds_alternative<double>(w)) {
             output.emplace_back(input[d] * std::get<double>(w));
@@ -142,7 +136,6 @@ inline GarbledInference::Neurons GarbledInference::AdditionLayer::process(const 
     Neurons output;
 
     for(size_t d = 0; d < input.size(); d++) {
-        // todo: assert: _weights[d].size == 1
         const auto w = _weights[d].front();
         if (std::holds_alternative<double>(w)) {
 
@@ -184,10 +177,9 @@ inline GarbledInference::Neurons GarbledInference::MaxPoolingLayer<kernel_size, 
             std::cout << "Warning: Processing max pooling layer with stride greater than input size." << std::endl;
         }
 
-        // resize output for this feature map TODO: is this correct?
+        // resize output for this feature map
         output[d].resize((inputWidth) / stride, (inputHeight) / stride);
 
-        // TODO: more efficient resizing
         for (Eigen::Index x = 0; x < inputWidth - (kernel_size - 1); x += stride) {
             for (Eigen::Index y = 0; y < inputHeight - (kernel_size - 1); y += stride) {
                 auto poolBlock = input[d].block(x, y, kernel_size, kernel_size);
@@ -213,7 +205,7 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
         // resize output feature map
         output[f].resize(input.front().rows(), input.front().cols());
 
-        //...init each pixel with zero... TODO: listenfunktion?
+        //...init each pixel with zero...
         for(Eigen::Index x = 0; x < output[f].rows(); x++) {
             for(Eigen::Index y = 0; y < output[f].cols(); y++) {
                 output[f](x, y) = 0.0;
@@ -223,7 +215,7 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
         // for each input... (d)
         for (size_t d = 0; d < input.size(); d++) {
 
-            // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers TODO: check wMatrix/ exception
+            // unbind std::variant monad for depth = d. Entries of _weights are assumed to be a matrix for convolutional layers
             const auto wMatrix = std::get<ParameterMatrix>(_weights[f][d]);
 
             const auto inputWidth = input[d].rows();
@@ -261,7 +253,6 @@ inline GarbledInference::Neurons GarbledInference::ConvolutionLayer::process(con
 }
 
 
-//TODO: this is a bit of a mess and probably doesnt work the same way ONNX runtime reshapes
 inline GarbledInference::Neurons GarbledInference::FlattenLayer::process(const GarbledInference::Neurons &input) noexcept {
 
 #ifdef DEBUG_LAYERS
@@ -286,7 +277,7 @@ inline GarbledInference::Neurons GarbledInference::FlattenLayer::process(const G
     return { list };
 
     /*
-    // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers TODO: check w/ exception
+    // unbind std::variant monad for depth = d. Entries of _weights is assumed to be a scalar for reshape layers
     const auto x_size = static_cast<size_t>(std::get<double>(_weights[0].front()));
     const auto y_size = static_cast<size_t>(std::get<double>(_weights[1].front()));
 

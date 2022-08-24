@@ -18,11 +18,13 @@
 
 
 /**
- * Simple I/O utility converting the MNIST input file to Eigen3 matrix.
- * TODO: update comment
+ * Simple I/O utility converting the MNIST image and label input files to Eigen3 matrix.
+ *
  * // cf. https://stackoverflow.com/questions/8286668/how-to-read-mnist-data-in-c
  *
  * @param inputImages relative path to input .idx3-ubyte image file
+ * @param inputLabels relative path to input .idx1-ubyte label file
+ * @return list of image/label pairs
  */
 std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const char* inputImages, const char* inputLabels);
 
@@ -32,7 +34,6 @@ std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const
 int main() {
 
     // read test data and labels from input file
-    //todo: debug output
     auto inputList= read_mnist(
             "/home/fdm/Documents/BA/t10k-images.idx3-ubyte",
             "/home/fdm/Documents/BA/t10k-labels.idx1-ubyte"
@@ -99,14 +100,13 @@ std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const
         int number_of_images=0;
         int n_rows=0;
         int n_cols=0;
-        //TODO: use reinterpret cast here as well
-        imageFile.read((char*)&magic_number_images, sizeof(magic_number_images));
+        imageFile.read(reinterpret_cast<char*>(&magic_number_images), sizeof(magic_number_images));
         magic_number_images= reverseInt(magic_number_images);
-        imageFile.read((char*)&number_of_images, sizeof(number_of_images));
+        imageFile.read(reinterpret_cast<char*>(&number_of_images), sizeof(number_of_images));
         number_of_images= reverseInt(number_of_images);
-        imageFile.read((char*)&n_rows, sizeof(n_rows));
+        imageFile.read(reinterpret_cast<char*>(&n_rows), sizeof(n_rows));
         n_rows= reverseInt(n_rows);
-        imageFile.read((char*)&n_cols, sizeof(n_cols));
+        imageFile.read(reinterpret_cast<char*>(&n_cols), sizeof(n_cols));
         n_cols= reverseInt(n_cols);
 
         //read label file header
@@ -124,7 +124,7 @@ std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const
 
         for(int i=0;i<number_of_images;++i)
         {
-            GarbledInference::Neurons image = {Eigen::Matrix<double, 28,28>::Zero()}; //todo: remove hardcoded 28x28
+            GarbledInference::Neurons image = {Eigen::Matrix<double, 28,28>::Zero()}; //must be hardcoded 28 because n_rows & n_cols is not defined at runtime
             //read image
             for(int r=0;r<n_rows;++r)
             {

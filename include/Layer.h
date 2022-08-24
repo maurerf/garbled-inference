@@ -8,7 +8,6 @@
 #include <eigen3/Eigen/Eigen>
 #include <TinyGarbleWrapper.h>
 
-//TODO: fix weak-vtables warning in clang
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wweak-vtables"
@@ -23,29 +22,26 @@
 namespace GarbledInference {
 
     /**
-    * TODO: Doxygen compliant interface comment.
+    * Basic data types used by the neural net implementation.
     */
     typedef Eigen::MatrixXd ParameterMatrix;
     typedef std::vector<std::vector<std::variant<double, ParameterMatrix>>> Parameters; //size of inner vector = number of input feature maps. size of outer vector = number of output feature maps
-    //TODO: most layer types (currently all but conv) use the same weight matrix for each input feature map. maybe change Parameters respecting that...
     typedef std::vector<Eigen::MatrixXd> Neurons; // size of vector = depth of input
 
 
 
-
-
     /**
-    * TODO: Doxygen compliant interface comment.
+    * Enum class encoding what kind of layer a GarbledInference::Layer instance represents.
     */
     enum class LAYER_TYPE {ACTIVATION, FULLY_CONNECTED, ADDITION, MAXPOOL_2, MAXPOOL_3, CONVOLUTION, RESHAPE};
 
 
 
-
-
     /**
-    * TODO: Doxygen compliant interface comment.
-    */
+     * Basic building block of the neural net.
+     *
+     * Base class defines recursive structure of chained Layer instances. Specialisations define individual behaviour.
+     */
     class Layer {
     public:
         // Constructors
@@ -64,7 +60,7 @@ namespace GarbledInference {
         Layer(Layer&&) = delete;
 
         // Destructor
-        virtual ~Layer() = default; //TODO: fix warning
+        virtual ~Layer() = default;
 
         //Member functions
         /**
@@ -84,11 +80,10 @@ namespace GarbledInference {
         /**
          * Virtual members function containing this layer's i/o mapping.
          *
-         *
          * @param input input to this layer's neurons
          * @return output of this layer's processing
          */
-        inline virtual Neurons process(const Neurons & input) noexcept { return input; } //TODO: make pure virtual
+        inline virtual Neurons process(const Neurons & input) noexcept = 0;
 
 
         GarbledInference::Parameters _weights;

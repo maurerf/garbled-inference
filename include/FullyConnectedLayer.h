@@ -3,7 +3,9 @@
 namespace GarbledInference {
 
     /**
-    * TODO: Doxygen compliant interface comment.
+     * This class represents a single dense/fully-connected layer of a neural network.
+     *
+     * The weights are expected to be in matrix form and per input data point.
     */
     class FullyConnectedLayer : public Layer {
     public:
@@ -12,7 +14,8 @@ namespace GarbledInference {
 
         // Member functions
         /**
-         * TODO
+         * Overrides GarbledInference::Layer's member function.
+         * Cf. documentation of base class.
          *
          * @param input see GarbledInference::Layer::process
          * @return see GarbledInference::Layer::process

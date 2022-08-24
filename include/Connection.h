@@ -12,7 +12,6 @@ namespace GarbledInference::Networking {
     class Connection : public std::enable_shared_from_this<Connection> {
     public:
 
-        //TODO: just return to normal constructor?
         static std::shared_ptr<Connection> Create(boost::asio::ip::tcp::socket&& socket) {
             return std::shared_ptr<Connection> {new Connection(std::move(socket)) };
         }
