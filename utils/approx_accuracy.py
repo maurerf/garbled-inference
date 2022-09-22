@@ -33,37 +33,73 @@ def relu_approx_1(x):
     """
     Square approximation
     """
-    return x**2
+    return (x * x)
 
 
 def relu_approx_2(x):
     """
-    Deg. 2 approximation:
-    0.375373 + 0.5x + 0.117071x²
-    source: https://arxiv.org/pdf/2009.03727.pdf, table 2
+    Deg. 2 approximation (more precise)
+    source: Chou et al., 2018
     """
-    return 0.375373 + (0.5*x) + (0.117071 * (x**2))
+    return (0.12050344 * x * x) + (0.5 * x) + 0.153613744
 
 
 def relu_approx_3(x):
     """
-    Deg. 4 approximation:
-    0.234606 + 0.5x + 0.204875x²− 0.0063896x⁴
-    source: https://arxiv.org/pdf/2009.03727.pdf, table 2
+    Deg. 2 approximation (powers of 2)
+    source: Chou et al., 2018
     """
-    return 0.234606 + (0.5 * x) + (0.204875 * (x**2)) - (0.0063896 * (x**4))
+    return (0.125 * x * x) + (0.5 * x) + 1
 
 
-def sign_approx_1(x):
-    return x  # todo: find approximations for sign
+def tanh_approx_1(x):
+    """
+    Deg. 2 approximation
+    source: Gottemukkula, 2019
+    """
+    return (-0.0000245768494133 * x * x) + (0.29 * x) + 0.0000153605308833
 
 
-def sign_approx_2(x):
-    return x  # todo: find approximations for sign
+def tanh_approx_2(x):
+    """
+    Deg. 3 approximation
+    source: Gottemukkula, 2019
+    """
+    return (-0.01 * x * x * x) + (-0.0000998798454775 * x * x) + (0.51 * x) + 0.0001234098040867
 
 
-def sign_approx_3(x):
-    return x  # todo: find approximations for sign
+def tanh_approx_3(x):
+    """
+    Deg. 4 approximation
+    source: Gottemukkula, 2019
+    """
+    return (-0.0000680998946437 * x * x * x * x) + (-0.01 * x * x * x) + (0.0005553441183901 * x * x) + (
+                0.51 * x) - 0.0003690088906928
+
+
+def swish_approx_1(x):
+    """
+    Deg. 2 approximation
+    source: Gottemukkula, 2019
+    """
+    return (0.1 * x * x) + (0.5 * x) + 0.24
+
+
+def swish_approx_2(x):
+    """
+    Deg. 3 approximation
+    source: Gottemukkula, 2019
+    """
+    return (-0.000054479915715 * x * x * x) + (0.1 * x * x) + (0.5 * x) + 0.24
+
+
+def swish_approx_3(x):
+    """
+    Deg. 4 approximation
+    source: Gottemukkula, 2019
+    """
+    return (-0.1593186187771646 * x * x * x * x) + (0.0000817198735725 * x * x * x) + (0.17 * x * x) + (
+                0.5 * x) - 0.07
 
 
 if __name__ == "__main__":
@@ -82,15 +118,15 @@ if __name__ == "__main__":
     y_test = keras.utils.to_categorical(y_test, 10)
 
     batch_size = 128
-    epochs = 1
+    epochs = 15
 
     # define original model
     model = keras.Sequential(
         [
             keras.Input(shape=(28, 28, 1)),
-            layers.Conv2D(8, kernel_size=(5, 5), activation="relu"),
+            layers.Conv2D(8, kernel_size=(5, 5), activation="swish"),
             layers.MaxPooling2D(pool_size=(2, 2), strides=(2, 2)),
-            layers.Conv2D(16, kernel_size=(5, 5), activation="relu"),
+            layers.Conv2D(16, kernel_size=(5, 5), activation="swish"),
             layers.MaxPooling2D(pool_size=(3, 3), strides=(3, 3)),
             layers.Flatten(),
             layers.Dense(10, activation=None),
@@ -103,7 +139,7 @@ if __name__ == "__main__":
     model.compile(loss=keras.losses.mean_squared_error, optimizer="Adam", metrics=["accuracy"])
 
     # train original model
-    model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
+    # model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test))
 
     # test accuracy of original
     _, acc = model.evaluate(x_test, y_test, batch_size=batch_size)
@@ -111,22 +147,35 @@ if __name__ == "__main__":
     print("accuracy:  %.3f" % (acc * 100.0))
 
     # use approximations of relu
-    # todo: clean up this model copying mess
-    model_copy = model
-    print("\n\n--- RELU APPROX 1 ---")
-    replace_af(model_copy, relu_approx_1)
-    model_copy = model
-    print("\n\n--- RELU APPROX 2 ---")
-    replace_af(model_copy, relu_approx_2)
-    model_copy = model
-    print("\n\n--- RELU APPROX 3 ---")
-    replace_af(model_copy, relu_approx_3)
-    model_copy = model
+    # model_copy = model
+    # print("\n\n--- RELU APPROX 1 ---")
+    # replace_af(model_copy, relu_approx_1)
+    # model_copy = model
+    # print("\n\n--- RELU APPROX 2 ---")
+    # replace_af(model_copy, relu_approx_2)
+    # model_copy = model
+    # print("\n\n--- RELU APPROX 3 ---")
+    # replace_af(model_copy, relu_approx_3)
 
-    # use approximations of sign
-    # print("\n\n--- SIGN APPROX 1 ---")
-    # replace_af(model, sign_approx_1)
-    # print("\n\n--- SIGN APPROX 2 ---")
-    # replace_af(model, sign_approx_2)
-    # print("\n\n--- SIGN APPROX 3 ---")
-    # replace_af(model, sign_approx_3)
+    # use approximations of tanh
+    # model_copy = model
+    # print("\n\n--- TANH APPROX 1 ---")
+    # replace_af(model_copy, tanh_approx_1)
+    # model_copy = model
+    # print("\n\n--- TANH APPROX 2 ---")
+    # replace_af(model_copy, tanh_approx_2)
+    # model_copy = model
+    # print("\n\n--- TANH APPROX 3 ---")
+    # replace_af(model_copy, tanh_approx_3)
+
+    # use approximations of swish
+    model_copy = model
+    # print("\n\n--- SWISH APPROX 1 ---")
+    # replace_af(model_copy, swish_approx_1)
+    # model_copy = model
+    # print("\n\n--- SWISH APPROX 2 ---")
+    # replace_af(model_copy, swish_approx_2)
+    # model_copy = model
+    print("\n\n--- SWISH APPROX 3 ---")
+    replace_af(model_copy, swish_approx_3)
+    model_copy = model
