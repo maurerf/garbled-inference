@@ -34,20 +34,26 @@ std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const
 int main() {
 
     // read test data and labels from input file
+    //todo: error if file(s) not found
     auto inputList= read_mnist(
-            "/home/fdm/Documents/BA/t10k-images.idx3-ubyte",
-            "/home/fdm/Documents/BA/t10k-labels.idx1-ubyte"
+            "/home/fdm/Documents/BA/git/garbled-inference/models/t10k-images.idx3-ubyte",
+            "/home/fdm/Documents/BA/git/garbled-inference/models/t10k-labels.idx1-ubyte"
     );
 
     size_t imagesClassified = 0;
     size_t imagesCorrectlyClassified = 0;
+    std::chrono::steady_clock::time_point timeBegin = std::chrono::steady_clock::now();
     for(const auto &input : inputList) {
         const auto result = GarbledInference::NeuralNet::getInstance().inference(input.first);
         imagesClassified++;
         if(result == input.second) {
             imagesCorrectlyClassified++;
         }
-        std::cout << result << " : " << input.second << " : " << static_cast<float>(imagesCorrectlyClassified)/static_cast<float>(imagesClassified) << std::endl;
+        std::chrono::steady_clock::time_point timeIteration = std::chrono::steady_clock::now();
+        std::cout
+            << "Time elapsed: " << std::chrono::duration_cast<std::chrono::milliseconds>(timeIteration - timeBegin).count() << "[ms]."
+            << "Images classified: " << imagesClassified << ". "
+            << "Classification Result: " << result << " : " << input.second << " : " << static_cast<float>(imagesCorrectlyClassified)/static_cast<float>(imagesClassified) << std::endl;
     }
 
     /*
