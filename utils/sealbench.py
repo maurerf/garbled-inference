@@ -16,10 +16,27 @@ def relu_approx_1(evaluator, x):
 def relu_approx_2(evaluator, x):
     """
     Deg. 2 approximation:
-    0.375373 + 0.5x + 0.117071x²
+    0.12050344² + 0.5x + 0.153613744
     source: https://arxiv.org/pdf/2009.03727.pdf, table 2
     """
-    return evaluator.square_inplace(x)  # todo
+    # 0.12050344²
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term1, seal.Plaintext(0.12050344)) # TODO: float -> int64, quantization?
+
+    # 0.5x
+    term2 = seal.Ciphertext()
+    evaluator.multiply_plain(x, seal.Plaintext(0.5), term2)
+
+    # 0.153613744
+    term3 = seal.Plaintext(0.153613744)
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(term2)
+    evaluator.add_plain_inplace(term3)
+
+    return res
 
 
 def relu_approx_3(evaluator, x):
@@ -63,7 +80,7 @@ def process(evaluator, encryptor, decryptor, relin_keys, input):
 
         # apply approximation. choose which approximation to use here
         x_res = relu_approx_1(evaluator, x_encrypted)
-        # x_res = relu_approx_2(evaluator, x_encrypted)
+        x_res = relu_approx_2(evaluator, x_encrypted)
         # x_res = relu_approx_3(evaluator, x_encrypted)
         # x_res = sign_approx_1(evaluator, x_encrypted)
         # x_res = sign_approx_1(evaluator, x_encrypted)
@@ -111,7 +128,7 @@ if __name__ == '__main__':
     # init randomized input. Inputs shall be larger than 32 bit, i.e. of type np.int64
     MAX_INT32 = 2147483647
     MAX_INT64 = 9223372036854775807
-    x_rand = np.random.randint(MAX_INT32, MAX_INT64, 1000, dtype=np.int64)
+    x_rand = np.random.randint(MAX_INT32, MAX_INT64, 10, dtype=np.int64)
     print(x_rand)
 
     # execute and time approximation function
