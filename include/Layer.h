@@ -16,7 +16,8 @@
 // define what activation function to use
 #define GI_ACTIVATION_RELU
 
-//#define DEBUG_LAYERS
+#define ENABLE_ACTIVATION_LAYER_TIMING
+#define DEBUG_LAYERS
 //#define DEBUG_LAYERS_VERBOSE
 
 namespace GarbledInference {

@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <string>
+#include <chrono>
 #include "Layer.h"
 
 // Implementation of all constructors and member functions of GarbledInference::Layer and derived classes thereof.
@@ -67,28 +69,36 @@ GarbledInference::Neurons GarbledInference::Layer::propagateForward(const Garble
     }
 }
 
-// note: this required double to be in ieee 754 64 bit format
+// note: this requires double to be in ieee 754 64 bit format
 inline double GarbledInference::ActivationLayer::activation(const double &input) noexcept {
 
-    // convert double to hex representation
+    //todo: correct mask handling: store somewhere else, use two separate masks
+    const unsigned long long mask_0x = 0xDEADBEEFDEADBEEF;
+
+    // convert double to hex representation and subtract mask
     std::stringstream ss;
-    ss << std::hex << std::uppercase << *reinterpret_cast<const unsigned long long*>(&input);
-    const std::string input_0x = ss.str();
+    ss << std::hex << std::uppercase << (*reinterpret_cast<const unsigned long long*>(&input) - mask_0x);
+    const std::string input_0x_str = ss.str();
 
-    std::cout << "input: " << input << " : " << input_0x << std::endl;
+    // run GC protocol on hexadecimal string input and convert output to unsigned long long
+    const std::string output_0x_str = GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::BOB>(input_0x_str);
+    const unsigned long long output_0x = std::stoull(output_0x_str, nullptr, 16);
+    const unsigned long long unmasked_0x = output_0x - mask_0x;
+    // hotfix: convert 0x0000000000000001 manually to 1.0. this is due to weird IEEE754 representation 1.0 := 2^0
+    const double unmasked_f64 = (unmasked_0x == 0x0000000000000001) ? 1.0 : *reinterpret_cast<const double*>(&unmasked_0x);
 
-    // run GC protocol on hexadecimal string input
-    std::cout << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::BOB>(input_0x) << std::endl;
+    // debug output
+    /*
+    std::cout << "input: " << input << " : " << input_0x_str << std::endl;
+    std::cout <<  "--- masked ---" << std::endl;
+    std::cout << "str: " << output_0x_str << std::endl;
+    std::cout << "ull: " << std::hex << std::uppercase << output_0x << std::endl;
+    std::cout <<  "--- unmasked ---" << std::endl;
+    std::cout << "ull: " << std::hex << std::uppercase << (output_0x - mask_0x) << std::endl;
+    std::cout << "double: " << unmasked_f64 << std::endl;
+    */
 
-    // convert hex string output to double
-
-#ifdef GI_ACTIVATION_STEP
-    return (i > 0) ? 1.0 : 0.0;
-#endif
-#ifdef GI_ACTIVATION_RELU
-    return (input > 0) ? input : 0.0;
-#endif
-    //more activation functions here
+    return unmasked_f64;
 }
 
 inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(const GarbledInference::Neurons& input) noexcept {
@@ -99,10 +109,16 @@ inline GarbledInference::Neurons GarbledInference::ActivationLayer::process(cons
 
     Neurons output;
 
+#ifdef ENABLE_ACTIVATION_LAYER_TIMING
+    auto start = std::chrono::high_resolution_clock::now();
+#endif
     for(const auto& d : input) {
         output.emplace_back(d.unaryExpr(&activation));
     }
-
+#ifdef ENABLE_ACTIVATION_LAYER_TIMING
+    auto stop = std::chrono::high_resolution_clock::now();
+    std::cout << "Processed activation layer in " << std::chrono::duration_cast<std::chrono::milliseconds>(stop - start).count() << "ms." << std::endl;
+#endif
     return output;
 }
 
@@ -120,7 +136,8 @@ inline GarbledInference::Neurons GarbledInference::FullyConnectedLayer::process(
         if (std::holds_alternative<double>(w)) {
             output.emplace_back(input[d] * std::get<double>(w));
         } else if (std::holds_alternative<ParameterMatrix>(w)) {
-            output.emplace_back(input[d] * std::get<ParameterMatrix>(w));
+            output.emplace_back(
+                    input[d] * std::get<ParameterMatrix>(w));
         }
     }
 
