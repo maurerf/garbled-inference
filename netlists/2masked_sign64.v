@@ -11,5 +11,5 @@ module relu(
     assign mask1 = g_input[63:0];
     assign mask2= g_input[127:64];
     assign unmasked = e_input + mask1; // "unmask" input
-    assign o = (unmasked[63] == 0)? mask2 + 1 : mask2;   //if the sign bit is high, send masked zero on the output else send masked one
+    assign o = (unmasked[63] == 0)? mask2 + 1 : mask2-1;   //if the sign bit is high, send masked zero on the output else send masked one
 endmodule
