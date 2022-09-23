@@ -72,31 +72,32 @@ GarbledInference::Neurons GarbledInference::Layer::propagateForward(const Garble
 // note: this requires double to be in ieee 754 64 bit format
 inline double GarbledInference::ActivationLayer::activation(const double &input) noexcept {
 
-    //todo: correct mask handling: store somewhere else, use two separate masks
-    const unsigned long long mask_0x = 0xDEADBEEFDEADBEEF;
+    //todo: correct mask handling: store somewhere else
+    const unsigned long long mask1_0x = 0xC0DEC0DEC0DEC0DE;
+    const unsigned long long mask2_0x = 0xDEADBEEFDEADBEEF;
 
     // convert double to hex representation and subtract mask
     std::stringstream ss;
-    ss << std::hex << std::uppercase << (*reinterpret_cast<const unsigned long long*>(&input) - mask_0x);
+    ss << std::hex << std::uppercase << (*reinterpret_cast<const unsigned long long*>(&input) - mask1_0x);
     const std::string input_0x_str = ss.str();
 
     // run GC protocol on hexadecimal string input and convert output to unsigned long long
     const std::string output_0x_str = GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::BOB>(input_0x_str);
     const unsigned long long output_0x = std::stoull(output_0x_str, nullptr, 16);
-    const unsigned long long unmasked_0x = output_0x - mask_0x;
+    const unsigned long long unmasked_0x = output_0x - mask2_0x;
     // hotfix: convert 0x0000000000000001 manually to 1.0. this is due to weird IEEE754 representation 1.0 := 2^0
     const double unmasked_f64 = (unmasked_0x == 0x0000000000000001) ? 1.0 : *reinterpret_cast<const double*>(&unmasked_0x);
 
     // debug output
-    /*
     std::cout << "input: " << input << " : " << input_0x_str << std::endl;
     std::cout <<  "--- masked ---" << std::endl;
     std::cout << "str: " << output_0x_str << std::endl;
     std::cout << "ull: " << std::hex << std::uppercase << output_0x << std::endl;
     std::cout <<  "--- unmasked ---" << std::endl;
-    std::cout << "ull: " << std::hex << std::uppercase << (output_0x - mask_0x) << std::endl;
+    std::cout << "ull: " << std::hex << std::uppercase << unmasked_0x << std::endl;
     std::cout << "double: " << unmasked_f64 << std::endl;
-    */
+
+    if(input > 0) exit(0);
 
     return unmasked_f64;
 }

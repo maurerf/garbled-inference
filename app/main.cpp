@@ -7,7 +7,7 @@
  */
 int main() {
     while(true) {
-        std::cout << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::ALICE>("DEADBEEFDEADBEEF") << std::endl << std::endl;
+        std::cout << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::ALICE>("DEADBEEFDEADBEEFC0DEC0DEC0DEC0DE") << std::endl << std::endl;
     }
 
     // create client & connect to server

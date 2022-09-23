@@ -8,7 +8,7 @@ namespace GarbledInference::Garbling {
 
     TinyGarbleWrapper &TinyGarbleWrapper::getInstance() {
         static TinyGarbleWrapper singleton {
-            GarbledInference::Garbling::TinyGarbleWrapper("localhost", 1234, "/home/fdm/CLionProjects/garbled-inference/netlists/masked_relu64.scd")
+            GarbledInference::Garbling::TinyGarbleWrapper("localhost", 1234, "/home/fdm/Documents/BA/git/garbled-inference/netlists/2masked_relu64.scd")
         };
         return singleton;
     }
