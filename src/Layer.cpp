@@ -89,6 +89,7 @@ inline double GarbledInference::ActivationLayer::activation(const double &input)
     const double unmasked_f64 = (unmasked_0x == 0x0000000000000001) ? 1.0 : *reinterpret_cast<const double*>(&unmasked_0x);
 
     // debug output
+    /*
     std::cout << "input: " << input << " : " << input_0x_str << std::endl;
     std::cout <<  "--- masked ---" << std::endl;
     std::cout << "str: " << output_0x_str << std::endl;
@@ -96,8 +97,7 @@ inline double GarbledInference::ActivationLayer::activation(const double &input)
     std::cout <<  "--- unmasked ---" << std::endl;
     std::cout << "ull: " << std::hex << std::uppercase << unmasked_0x << std::endl;
     std::cout << "double: " << unmasked_f64 << std::endl;
-
-    if(input > 0) exit(0);
+    */
 
     return unmasked_f64;
 }
