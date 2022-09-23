@@ -1,12 +1,3 @@
-// Executables must have the following defined if the library contains
-// doctest definitions. For builds with this disabled, e.g. code shipped to
-// users, this can be left out.
-#ifdef /*ENABLE_DOCTEST_IN_LIBRARY*/ false //TODO: fix doctest
-#define DOCTEST_CONFIG_IMPLEMENT
-#include "doctest/doctest.h"
-#endif
-
-
 #include <TinyGarbleWrapper.h>
 #include <iostream>
 #include <chrono> // std::chrono::microseconds
@@ -17,8 +8,6 @@
 int main() {
     while(true) {
         std::cout << GarbledInference::Garbling::TinyGarbleWrapper::getInstance().evaluate<GarbledInference::Garbling::ROLE::ALICE>("DEADBEEFDEADBEEF") << std::endl << std::endl;
-        //using namespace std::chrono_literals;
-        //std::this_thread::sleep_for(200ms);
     }
 
     // create client & connect to server

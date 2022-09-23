@@ -17,15 +17,11 @@ project(GARBLED_INFERENCE VERSION 0.1 LANGUAGES CXX)
 option(ENABLE_WARNINGS_SETTINGS "Allow target_set_warnings to add flags and defines.
                                  Set this to OFF if you want to provide your own warning parameters." ON)
 option(ENABLE_LTO "Enable link time optimization" ON)
-option(ENABLE_DOCTESTS "Include tests in the library. Setting this to OFF will remove all doctest related code.
-                        Tests in tests/*.cpp will still be enabled." ON)
 
 # Include stuff. No change needed.
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 include(ConfigSafeGuards)
 include(Colors)
-include(CTest)
-include(Doctest)
 include(Documentation)
 include(LTO)
 include(Misc)
@@ -43,9 +39,6 @@ find_lto(CXX)
 set(SOURCES          # All .cpp files in src/
     src/NeuralNet.cpp
         include/Layer.h src/Layer.cpp src/Server.cpp include/Server.h src/Connection.cpp include/Connection.h include/Client.h src/Client.cpp include/weights/MNIST/convolution_2.h.in include/weights/MNIST/dense_1.h.in include/weights/MNIST/addition_1.h.in include/weights/MNIST/addition_2.h.in include/weights/MNIST/addition_3.h.in include/weights/MNIST/reshape_1.h.in include/TinyGarbleWrapper.h src/TinyGarbleWrapper.cpp)
-set(TESTFILES        # All .cpp files in tests/
-    tests/main.cpp
-)
 set(LIBRARY_NAME gi-lib)  # Default name for the library built from src/*.cpp (change if you wish)
 
 
@@ -60,10 +53,6 @@ target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/include)
 target_include_directories(${LIBRARY_NAME} PUBLIC ${PROJECT_SOURCE_DIR}/TinyGarble)
 target_link_libraries(${LIBRARY_NAME} TinyGarble)
 
-
-
-# There's also (probably) doctests within the library, so we need to see this as well.
-# target_link_libraries(${LIBRARY_NAME} PUBLIC doctest)
 
 # Set the compile options you want (change as needed).
 target_set_warnings(${LIBRARY_NAME} ENABLE ALL AS_ERROR ALL DISABLE Annoying)
@@ -97,6 +86,3 @@ set_target_properties(
         CXX_STANDARD_REQUIRED YES
         CXX_EXTENSIONS NO
 )
-
-# Set up tests (see tests/CMakeLists.txt).
-add_subdirectory(tests)

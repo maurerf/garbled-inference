@@ -1,10 +1,6 @@
 // Executables must have the following defined if the library contains
 // doctest definitions. For builds with this disabled, e.g. code shipped to
 // users, this can be left out.
-#ifdef /*ENABLE_DOCTEST_IN_LIBRARY*/ false //TODO: fix doctest
-#define DOCTEST_CONFIG_IMPLEMENT
-#include "doctest/doctest.h"
-#endif
 
 #include <iostream>
 #include <fstream>
