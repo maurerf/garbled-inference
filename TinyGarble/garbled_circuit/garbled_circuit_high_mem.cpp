@@ -72,11 +72,13 @@ int GarbleBNHighMem(const GarbledCircuit& garbled_circuit, BIGNUM* p_init,
   }
   uint64_t ot_time = RDTSC - ot_start_time;
 
+    /* todo: reenable?
   LOG(INFO) << "Alice transfer labels time (cc) = " << ot_time
       << "\t(cc/bit) = "
       << ot_time
           / ((double) (garbled_circuit.e_init_size
-              + (*clock_cycles) * garbled_circuit.e_input_size)) << endl;			  
+              + (*clock_cycles) * garbled_circuit.e_input_size)) << endl;
+    */
 #if  TIMING_EVAL	
 	cout << ot_time << "\t";
 #endif
@@ -118,10 +120,12 @@ int EvaluateBNHighMem(const GarbledCircuit& garbled_circuit, BIGNUM* p_init,
                              input_labels, *clock_cycles, disable_OT, connfd));
   uint64_t ot_time = RDTSC - ot_start_time;
 
+  /* todo: reenable?
   LOG(INFO) << "Bob transfer labels time (cc) = " << ot_time << "\t(cc/bit) = "
       << ot_time
           / ((double) (garbled_circuit.e_init_size
               + (*clock_cycles) * garbled_circuit.e_input_size)) << endl;
+  */
 #if  TIMING_EVAL
 	cout << ot_time << "\t";
 #endif
@@ -424,6 +428,7 @@ int GarbleHighMem(const GarbledCircuit& garbled_circuit, BIGNUM* p_init,
 
   }
 
+  /* todo: reenable?
   LOG(INFO) << "Non-secret skipped non-XOR gates = "
       << num_skipped_non_xor_gates << " out of "
       << num_of_non_xor * (*clock_cycles) << "\t ("
@@ -435,6 +440,7 @@ int GarbleHighMem(const GarbledCircuit& garbled_circuit, BIGNUM* p_init,
 
   LOG(INFO) << "Alice communication time (cc) = " << comm_time << endl;
   LOG(INFO) << "Alice garbling time (cc) = " << garble_time << endl;
+   */
 #if  TIMING_EVAL 
   cout << comm_time << "\t" << garble_time << "\t";
 #endif
@@ -711,9 +717,10 @@ int EvaluateHighMem(const GarbledCircuit& garbled_circuit, BIGNUM* p_init,
     }
   }
 
-  LOG(INFO) << "Bob communication time (cc) = " << comm_time << endl;
-  LOG(INFO) << "Bob evaluation time (cc) = " << eval_time << endl;
-  
+    /* todo: reenable?
+    LOG(INFO) << "Bob communication time (cc) = " << comm_time << endl;
+    LOG(INFO) << "Bob evaluation time (cc) = " << eval_time << endl;
+    */
 #if  TIMING_EVAL
   cout << comm_time << "\t" << eval_time << "\t";
 #endif
