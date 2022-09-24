@@ -6,7 +6,7 @@ import seal
 import numpy as np
 
 
-# TODO: fix "not enought relin keys" for order > 2 polys, i.e. adjust multiplicative depth
+# TODO: fix "not enough relin keys" for order > 2 polys, i.e. adjust multiplicative depth
 
 def relu_approx_1(evaluator, x):
     """
@@ -55,7 +55,7 @@ def relu_approx_3(evaluator, x):
     term2 = seal.Ciphertext()
     term2 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.5, 64)]))
 
-    # 1
+    # 1.0
     term3 = batch_encoder.encode([quantise(1.0, 64)])
 
     # add terms
@@ -298,7 +298,7 @@ def process(evaluator, encryptor, decryptor, relin_keys, input):
         # x_res = swish_approx_3(evaluator, x_encrypted)
 
         # decrypt and decode result
-        evaluator.relinearize_inplace(x_res, relin_keys)
+        # evaluator.relinearize_inplace(x_res, relin_keys)
         # print(f'noise budget in x_squared: {decryptor.invariant_noise_budget(x_encrypted)} bits')
         return decryptor.decrypt(x_res)
         # print(batch_encoder.decode(decrypted_result))
@@ -339,7 +339,8 @@ if __name__ == '__main__':
     # init randomized input. Inputs shall be larger than 32 bit, i.e. of type np.int64
     MAX_INT32 = 2147483647
     MAX_INT64 = 9223372036854775807
-    x_rand = np.random.randint(MAX_INT32, MAX_INT64, 100, dtype=np.int64)
+    number_of_inputs = 9408  # number of activations in activation layers of MNIST model
+    x_rand = np.random.randint(MAX_INT32, MAX_INT64, number_of_inputs, dtype=np.int64)
     print(x_rand)
 
     # execute and time approximation function
