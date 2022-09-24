@@ -1,0 +1,618 @@
+/home/fdm/Documents/BA/git/garbled-inference/cmake-build-debug/server
+Constructed new layer! 10 layers remaining.
+Constructed new layer! 9 layers remaining.
+Constructed new layer! 8 layers remaining.
+Constructed new layer! 7 layers remaining.
+Constructed new layer! 6 layers remaining.
+Constructed new layer! 5 layers remaining.
+Constructed new layer! 4 layers remaining.
+Constructed new layer! 3 layers remaining.
+Constructed new layer! 2 layers remaining.
+Constructed new layer! 1 layers remaining.
+Constructed new layer! 0 layers remaining.
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244052ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 123134ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 367293[ms].Images classified: 1. Classification Result: 7 : 7 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 243867ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 121447ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 732716[ms].Images classified: 2. Classification Result: 2 : 2 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 243555ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122784ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 1099165[ms].Images classified: 3. Classification Result: 1 : 1 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244169ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122957ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 1466401[ms].Images classified: 4. Classification Result: 0 : 0 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244891ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122593ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 1833995[ms].Images classified: 5. Classification Result: 4 : 4 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244893ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122425ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 2201422[ms].Images classified: 6. Classification Result: 1 : 1 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 243946ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122246ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 2567724[ms].Images classified: 7. Classification Result: 4 : 4 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244486ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122397ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 2934717[ms].Images classified: 8. Classification Result: 9 : 9 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 245983ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122170ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 3302979[ms].Images classified: 9. Classification Result: 5 : 5 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244738ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122368ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 3670194[ms].Images classified: 10. Classification Result: 9 : 9 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 246002ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122193ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 4038500[ms].Images classified: 11. Classification Result: 0 : 0 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244058ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122724ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 4405391[ms].Images classified: 12. Classification Result: 6 : 6 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244650ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122544ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 4772697[ms].Images classified: 13. Classification Result: 9 : 9 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 243835ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122542ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 5139181[ms].Images classified: 14. Classification Result: 0 : 0 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244428ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122124ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 5505845[ms].Images classified: 15. Classification Result: 1 : 1 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244105ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 121597ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 5871655[ms].Images classified: 16. Classification Result: 5 : 5 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244865ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122886ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 6239516[ms].Images classified: 17. Classification Result: 9 : 9 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 246216ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 121216ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 6607056[ms].Images classified: 18. Classification Result: 7 : 7 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 243741ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122146ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 6973052[ms].Images classified: 19. Classification Result: 3 : 3 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244972ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122616ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 7340752[ms].Images classified: 20. Classification Result: 4 : 4 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244467ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122203ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 7707532[ms].Images classified: 21. Classification Result: 9 : 9 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244857ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122207ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 8074704[ms].Images classified: 22. Classification Result: 6 : 6 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 244076ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 122913ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 8441803[ms].Images classified: 23. Classification Result: 6 : 6 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
+Processed activation layer in 243724ms.
+PropagateForward(): Input size: 8 x 28 x 28
+Processing max-pooling layer!
+PropagateForward(): Input size: 8 x 14 x 14
+Processing convolution layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing addition layer!
+PropagateForward(): Input size: 16 x 14 x 14
+Processing activation layer!
+Processed activation layer in 121321ms.
+PropagateForward(): Input size: 16 x 14 x 14
+Processing max-pooling layer!
+PropagateForward(): Input size: 16 x 4 x 4
+Processing reshape layer!
+PropagateForward(): Input size: 1 x 1 x 256
+Processing fully connected layer!
+PropagateForward(): Input size of final layer: 1 x 1 x 10
+Processing addition layer!
+Time elapsed: 8806956[ms].Images classified: 24. Classification Result: 5 : 5 : 1
+PropagateForward(): Input size: 1 x 28 x 28
+Processing convolution layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing addition layer!
+PropagateForward(): Input size: 8 x 28 x 28
+Processing activation layer!
