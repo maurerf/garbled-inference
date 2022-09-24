@@ -6,58 +6,266 @@ import seal
 import numpy as np
 
 
+# TODO: fix "not enought relin keys" for order > 2 polys, i.e. adjust multiplicative depth
+
 def relu_approx_1(evaluator, x):
     """
     Square approximation
     """
-    return evaluator.square_inplace(x)
+    evaluator.square_inplace(x)
+    return x
 
 
 def relu_approx_2(evaluator, x):
     """
-    Deg. 2 approximation:
-    0.12050344² + 0.5x + 0.153613744
-    source: https://arxiv.org/pdf/2009.03727.pdf, table 2
+    Deg. 2 approximation (more precise)
+    source: Chou et al., 2018
     """
-    # 0.12050344²
+    # 0.12050344x²
     term1 = seal.Ciphertext()
     term1 = evaluator.multiply(x, x)
-    evaluator.multiply_plain_inplace(term1, seal.Plaintext(0.12050344)) # TODO: float -> int64, quantization?
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(0.12050344, 64)]))
 
     # 0.5x
     term2 = seal.Ciphertext()
-    evaluator.multiply_plain(x, seal.Plaintext(0.5), term2)
+    term2 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.5, 64)]))
 
     # 0.153613744
-    term3 = seal.Plaintext(0.153613744)
+    term3 = batch_encoder.encode([quantise(0.153613744, 64)])
 
     # add terms
     res = term1
-    evaluator.add_inplace(term2)
-    evaluator.add_plain_inplace(term3)
+    evaluator.add_inplace(res, term2)
+    evaluator.add_plain_inplace(res, term3)
 
     return res
 
 
 def relu_approx_3(evaluator, x):
     """
-    Deg. 4 approximation:
-    0.234606 + 0.5x + 0.204875x²− 0.0063896x⁴
-    source: https://arxiv.org/pdf/2009.03727.pdf, table 2
+    Deg. 2 approximation (powers of 2)
+    source: Chou et al., 2018
     """
-    return evaluator.square_inplace(x)  # todo
+    # 0.125x²
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(0.125, 64)]))
+
+    # 0.5x
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.5, 64)]))
+
+    # 1
+    term3 = batch_encoder.encode([quantise(1.0, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_plain_inplace(res, term3)
+
+    return res
 
 
-def sign_approx_1(evaluator, x):
-    return x  # todo: find approximations for sign
+def tanh_approx_1(evaluator, x):
+    """
+    Deg. 2 approximation
+    source: Gottemukkula, 2019
+    """
+    # -0.0000245768494133x²
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(-0.0000245768494133, 64)]))
+
+    # 0.29x
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.29, 64)]))
+
+    # 0.0000153605308833
+    term3 = batch_encoder.encode([quantise(0.0000153605308833, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_plain_inplace(res, term3)
+
+    return res
 
 
-def sign_approx_2(evaluator, x):
-    return x  # todo: find approximations for sign
+def tanh_approx_2(evaluator, x):
+    """
+    Deg. 3 approximation
+    source: Gottemukkula, 2019
+    """
+    # -0.01x³
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    term1 = evaluator.multiply(term1, x)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(-0.01, 64)]))
+
+    # -0.0000998798454775x²
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term2, batch_encoder.encode([quantise(-0.0000998798454775, 64)]))
+
+    # 0.51x
+    term3 = seal.Ciphertext()
+    term3 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.51, 64)]))
+
+    # 0.0001234098040867
+    term4 = batch_encoder.encode([quantise(0.0001234098040867, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_inplace(res, term3)
+    evaluator.add_plain_inplace(res, term4)
+
+    return res
 
 
-def sign_approx_3(evaluator, x):
-    return x  # todo: find approximations for sign
+def tanh_approx_3(evaluator, x):
+    """
+    Deg. 4 approximation
+    source: Gottemukkula, 2019
+    """
+    # -0.0000680998946437x⁴
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    term1 = evaluator.multiply(term1, term1)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(-0.0000680998946437, 64)]))
+
+    # -0.01x³
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply(x, x)
+    term2 = evaluator.multiply(term2, x)
+    evaluator.multiply_plain_inplace(term2, batch_encoder.encode([quantise(-0.01, 64)]))
+
+    # -0.0005553441183901x²
+    term3 = seal.Ciphertext()
+    term3 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term3, batch_encoder.encode([quantise(-0.0005553441183901, 64)]))
+
+    # 0.51x
+    term4 = seal.Ciphertext()
+    term4 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.51, 64)]))
+
+    # 0.0001234098040867
+    term5 = batch_encoder.encode([quantise(0.0003690088906928, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_inplace(res, term3)
+    evaluator.add_inplace(res, term4)
+    evaluator.add_plain_inplace(res, term5)
+
+    return res
+
+
+def swish_approx_1(evaluator, x):
+    """
+    Deg. 2 approximation
+    source: Gottemukkula, 2019
+    """
+    # 0.1²
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(0.1, 64)]))
+
+    # 0.5x
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.5, 64)]))
+
+    # 0.24
+    term3 = batch_encoder.encode([quantise(0.24, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_plain_inplace(res, term3)
+
+    return res
+
+
+def swish_approx_2(evaluator, x):
+    """
+    Deg. 3 approximation
+    source: Gottemukkula, 2019
+    """
+    # -0.000054479915715x³
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    term1 = evaluator.multiply(term1, x)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(-0.000054479915715, 64)]))
+
+    # 0.1x²
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term2, batch_encoder.encode([quantise(0.1, 64)]))
+
+    # 0.5x
+    term3 = seal.Ciphertext()
+    term3 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.5, 64)]))
+
+    # 0.0001234098040867
+    term4 = batch_encoder.encode([quantise(0.24, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_inplace(res, term3)
+    evaluator.add_plain_inplace(res, term4)
+
+    return res
+
+
+def swish_approx_3(evaluator, x):
+    """
+    Deg. 4 approximation
+    source: Gottemukkula, 2019
+    """
+    # -0.1593186187771646x⁴
+    term1 = seal.Ciphertext()
+    term1 = evaluator.multiply(x, x)
+    term1 = evaluator.multiply(term1, term1)
+    evaluator.multiply_plain_inplace(term1, batch_encoder.encode([quantise(-0.1593186187771646, 64)]))
+
+    # 0.0000817198735725x³
+    term2 = seal.Ciphertext()
+    term2 = evaluator.multiply(x, x)
+    term2 = evaluator.multiply(term2, x)
+    evaluator.multiply_plain_inplace(term2, batch_encoder.encode([quantise(-0.01, 64)]))
+
+    # 0.17x²
+    term3 = seal.Ciphertext()
+    term3 = evaluator.multiply(x, x)
+    evaluator.multiply_plain_inplace(term3, batch_encoder.encode([quantise(0.17, 64)]))
+
+    # 0.5x
+    term4 = seal.Ciphertext()
+    term4 = evaluator.multiply_plain(x, batch_encoder.encode([quantise(0.5, 64)]))
+
+    # -0.07
+    term5 = batch_encoder.encode([quantise(-0.07, 64)])
+
+    # add terms
+    res = term1
+    evaluator.add_inplace(res, term2)
+    evaluator.add_inplace(res, term3)
+    evaluator.add_inplace(res, term4)
+    evaluator.add_plain_inplace(res, term5)
+
+    return res
+
+
+def quantise(x, bits):
+    # apply simplified quantisation of Wingarz et al.
+    n = float(2 ** bits - 1)
+    x = np.tanh(x)
+    x = np.round(x * n) / n
+
+    # scale to integer range
+    return int(np.round(x * n))
 
 
 def process(evaluator, encryptor, decryptor, relin_keys, input):
@@ -79,12 +287,15 @@ def process(evaluator, encryptor, decryptor, relin_keys, input):
         # print(f'noise budget in freshly encrypted x: {decryptor.invariant_noise_budget(x_encrypted)}')
 
         # apply approximation. choose which approximation to use here
-        x_res = relu_approx_1(evaluator, x_encrypted)
-        x_res = relu_approx_2(evaluator, x_encrypted)
+        # x_res = relu_approx_1(evaluator, x_encrypted)
+        # x_res = relu_approx_2(evaluator, x_encrypted)
         # x_res = relu_approx_3(evaluator, x_encrypted)
-        # x_res = sign_approx_1(evaluator, x_encrypted)
-        # x_res = sign_approx_1(evaluator, x_encrypted)
-        # x_res = sign_approx_1(evaluator, x_encrypted)
+        # x_res = tanh_approx_1(evaluator, x_encrypted)
+        # x_res = tanh_approx_2(evaluator, x_encrypted)
+        # x_res = tanh_approx_3(evaluator, x_encrypted)
+        # x_res = swish_approx_1(evaluator, x_encrypted)
+        # x_res = swish_approx_2(evaluator, x_encrypted)
+        # x_res = swish_approx_3(evaluator, x_encrypted)
 
         # decrypt and decode result
         evaluator.relinearize_inplace(x_res, relin_keys)
@@ -128,7 +339,7 @@ if __name__ == '__main__':
     # init randomized input. Inputs shall be larger than 32 bit, i.e. of type np.int64
     MAX_INT32 = 2147483647
     MAX_INT64 = 9223372036854775807
-    x_rand = np.random.randint(MAX_INT32, MAX_INT64, 10, dtype=np.int64)
+    x_rand = np.random.randint(MAX_INT32, MAX_INT64, 100, dtype=np.int64)
     print(x_rand)
 
     # execute and time approximation function
