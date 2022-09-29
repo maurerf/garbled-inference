@@ -13,7 +13,6 @@ namespace GarbledInference::Garbling {
 
     class TinyGarbleWrapper {
     public:
-        //TODO: lots of comments
 
         /**
          * Access to the singleton Wrapper.
@@ -26,6 +25,13 @@ namespace GarbledInference::Garbling {
 
         TinyGarbleWrapper(TinyGarbleWrapper&&) = delete;
 
+        /**
+         * Evaluates a garbled circuit by using TinyGarble.
+         *
+         * @tparam role Declare this process to be either ALICE or BOB.
+         * @param input Hex string representation of this party's input.
+         * @return Hex string representation of the evaluation's result.
+         */
         template<ROLE role>
         std::string evaluate(const std::string &input);
 

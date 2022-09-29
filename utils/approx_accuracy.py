@@ -28,7 +28,6 @@ def replace_af(original_model, activation_function):
     print("post training accuracy: %.3f" % (acc * 100.0))
 
 
-# todo: these approximations dont operate on scalars but on (28, 28, 1)
 def relu_approx_1(x):
     """
     Square approximation

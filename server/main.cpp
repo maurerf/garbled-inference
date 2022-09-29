@@ -30,11 +30,16 @@ std::vector<std::pair<GarbledInference::Neurons, Eigen::Index>> read_mnist(const
 int main() {
 
     // read test data and labels from input file
-    //todo: error if file(s) not found
     auto inputList= read_mnist(
             "/home/fdm/Documents/BA/git/garbled-inference/models/t10k-images.idx3-ubyte",
             "/home/fdm/Documents/BA/git/garbled-inference/models/t10k-labels.idx1-ubyte"
     );
+
+    // check if MNIST input was properly read
+    if(inputList.empty()) {
+        std::cout << "Error: Input data or label file was not found. Make sure to adjust location in garbled-inference/server/main.cpp." << std::endl;
+        exit(EXIT_FAILURE);
+    }
 
     size_t imagesClassified = 0;
     size_t imagesCorrectlyClassified = 0;

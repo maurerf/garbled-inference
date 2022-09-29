@@ -24,7 +24,6 @@ namespace GarbledInference::Networking {
     }
 
     void Connection::asyncRead() {
-        // TODO: different delimiter?
         boost::asio::async_read_until(_socket, _streamBuf, "\n", [shared_this = shared_from_this()]
                 (boost::system::error_code ec, size_t bytesTransferred) {
             if (ec) {

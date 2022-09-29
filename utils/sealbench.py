@@ -6,8 +6,6 @@ import seal
 import numpy as np
 
 
-# TODO: fix "not enough relin keys" for order > 2 polys, i.e. adjust multiplicative depth
-
 def relu_approx_1(evaluator, x):
     """
     Square approximation

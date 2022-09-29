@@ -72,7 +72,6 @@ GarbledInference::Neurons GarbledInference::Layer::propagateForward(const Garble
 // note: this requires double to be in ieee 754 64 bit format
 inline double GarbledInference::ActivationLayer::activation(const double &input) noexcept {
 
-    //todo: correct mask handling: store somewhere else
     const unsigned long long mask1_0x = 0xC0DEC0DEC0DEC0DE;
     const unsigned long long mask2_0x = 0xDEADBEEFDEADBEEF;
 

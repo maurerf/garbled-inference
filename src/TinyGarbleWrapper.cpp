@@ -23,8 +23,8 @@ namespace GarbledInference::Garbling {
             _init_str{ReadFileOrPassHex("0")}, //unused
             //_input_f_hex_str is passed in evaluate()
             _terminate_period{0},
-            _clock_cycles{1}, //todo: what exactly does this mean? what is 1 clock cycle
-            _output_mask{0},  //todo: what exactly does this mean? does it tamper with output?
+            _clock_cycles{1},
+            _output_mask{0},
             _output_mode{OutputMode::consecutive},
             _disable_OT{false},
             _low_mem_foot{false} {
