@@ -40,42 +40,41 @@ Epoch 15/15
 --- ORIGINAL ---
 accuracy:  97.550
 
-
 --- RELU APPROX 1 ---
-79/79 [==============================] - 1s 5ms/step - loss: 2873262.2500 - accuracy: 0.1673
-pre training accuracy 16.730
+79/79 [==============================] - 0s 2ms/step - loss: 0.0977 - accuracy: 0.0895
+pre training accuracy 8.950
 Epoch 1/15
-469/469 [==============================] - 32s 69ms/step - loss: 22019.5547 - accuracy: 0.1460 - val_loss: 1086.1151 - val_accuracy: 0.1171
+469/469 [==============================] - 31s 65ms/step - loss: 0.0346 - accuracy: 0.8490 - val_loss: 0.0210 - val_accuracy: 0.9453
 Epoch 2/15
-469/469 [==============================] - 32s 69ms/step - loss: 645.0879 - accuracy: 0.1191 - val_loss: 359.1457 - val_accuracy: 0.1168
+469/469 [==============================] - 32s 69ms/step - loss: 0.0188 - accuracy: 0.9492 - val_loss: 0.0165 - val_accuracy: 0.9607
 Epoch 3/15
-469/469 [==============================] - 34s 72ms/step - loss: 236.1318 - accuracy: 0.1299 - val_loss: 150.7344 - val_accuracy: 0.1329
+469/469 [==============================] - 31s 66ms/step - loss: 0.0157 - accuracy: 0.9599 - val_loss: 0.0145 - val_accuracy: 0.9648
 Epoch 4/15
-469/469 [==============================] - 33s 70ms/step - loss: 104.2177 - accuracy: 0.1438 - val_loss: 74.7217 - val_accuracy: 0.1404
+469/469 [==============================] - 33s 70ms/step - loss: 0.0141 - accuracy: 0.9652 - val_loss: 0.0130 - val_accuracy: 0.9706
 Epoch 5/15
-469/469 [==============================] - 31s 65ms/step - loss: 55.2245 - accuracy: 0.1396 - val_loss: 44.0045 - val_accuracy: 0.1361
+469/469 [==============================] - 33s 69ms/step - loss: 0.0131 - accuracy: 0.9671 - val_loss: 0.0123 - val_accuracy: 0.9714
 Epoch 6/15
-469/469 [==============================] - 32s 69ms/step - loss: 34.3593 - accuracy: 0.1332 - val_loss: 29.1819 - val_accuracy: 0.1330
+469/469 [==============================] - 32s 68ms/step - loss: 0.0123 - accuracy: 0.9701 - val_loss: 0.0119 - val_accuracy: 0.9718
 Epoch 7/15
-469/469 [==============================] - 31s 66ms/step - loss: 23.4101 - accuracy: 0.1296 - val_loss: 20.5681 - val_accuracy: 0.1355
+469/469 [==============================] - 31s 66ms/step - loss: 0.0118 - accuracy: 0.9724 - val_loss: 0.0116 - val_accuracy: 0.9734
 Epoch 8/15
-469/469 [==============================] - 31s 67ms/step - loss: 16.7691 - accuracy: 0.1303 - val_loss: 15.0703 - val_accuracy: 0.1336
+469/469 [==============================] - 31s 66ms/step - loss: 0.0113 - accuracy: 0.9736 - val_loss: 0.0110 - val_accuracy: 0.9745
 Epoch 9/15
-469/469 [==============================] - 30s 65ms/step - loss: 12.3917 - accuracy: 0.1310 - val_loss: 11.2626 - val_accuracy: 0.1350
+469/469 [==============================] - 31s 66ms/step - loss: 0.0110 - accuracy: 0.9750 - val_loss: 0.0107 - val_accuracy: 0.9753
 Epoch 10/15
-469/469 [==============================] - 32s 67ms/step - loss: 9.3415 - accuracy: 0.1319 - val_loss: 8.5735 - val_accuracy: 0.1394
+469/469 [==============================] - 29s 62ms/step - loss: 0.0107 - accuracy: 0.9762 - val_loss: 0.0105 - val_accuracy: 0.9758
 Epoch 11/15
-469/469 [==============================] - 32s 68ms/step - loss: 7.1582 - accuracy: 0.1330 - val_loss: 6.6051 - val_accuracy: 0.1406
+469/469 [==============================] - 27s 58ms/step - loss: 0.0104 - accuracy: 0.9768 - val_loss: 0.0104 - val_accuracy: 0.9766
 Epoch 12/15
-469/469 [==============================] - 33s 71ms/step - loss: 5.5398 - accuracy: 0.1332 - val_loss: 5.1244 - val_accuracy: 0.1395
+469/469 [==============================] - 30s 65ms/step - loss: 0.0102 - accuracy: 0.9773 - val_loss: 0.0102 - val_accuracy: 0.9768
 Epoch 13/15
-469/469 [==============================] - 32s 68ms/step - loss: 4.3148 - accuracy: 0.1331 - val_loss: 3.9858 - val_accuracy: 0.1391
+469/469 [==============================] - 30s 64ms/step - loss: 0.0100 - accuracy: 0.9778 - val_loss: 0.0100 - val_accuracy: 0.9783
 Epoch 14/15
-469/469 [==============================] - 33s 71ms/step - loss: 3.3817 - accuracy: 0.1332 - val_loss: 3.0957 - val_accuracy: 0.1365
+469/469 [==============================] - 32s 67ms/step - loss: 0.0098 - accuracy: 0.9789 - val_loss: 0.0100 - val_accuracy: 0.9787
 Epoch 15/15
-469/469 [==============================] - 28s 61ms/step - loss: 2.6557 - accuracy: 0.1328 - val_loss: 2.4229 - val_accuracy: 0.1380
-79/79 [==============================] - 0s 2ms/step - loss: 2.4229 - accuracy: 0.1380
-post training accuracy: 13.800
+469/469 [==============================] - 30s 64ms/step - loss: 0.0097 - accuracy: 0.9795 - val_loss: 0.0097 - val_accuracy: 0.9774
+79/79 [==============================] - 0s 2ms/step - loss: 0.0097 - accuracy: 0.9774
+post training accuracy: 97.740
 
 
 --- RELU APPROX 2 ---
